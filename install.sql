@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS centre CASCADE;
+DROP TABLE IF EXISTS type_engin CASCADE;
 DROP TABLE IF EXISTS vehicule CASCADE;
 DROP TABLE IF EXISTS compartiment CASCADE;
 DROP TABLE IF EXISTS materiel CASCADE;
@@ -17,13 +18,25 @@ CREATE TABLE centre
 INSERT INTO centre(nom, adresse, chef_centre, telephone)
 VALUES ('CIS Oignies', '105 Rue des 80 Fusillés, 62590 Oignies', 'Lieutenant Fengler', '321692618');
 
+CREATE TABLE type_engin
+(
+    nom TEXT,
+    CONSTRAINT pkey_type_engin PRIMARY KEY (nom)
+);
+
+INSERT INTO type_engin(nom)
+VALUES  ('VSAV'),
+        ('FPT'),
+        ('FSR');
+
 CREATE TABLE vehicule
 (
     immatriculation VARCHAR(7),
     type_engin TEXT,
     id_centre INT,
     CONSTRAINT pkey_vehicule PRIMARY KEY (immatriculation),
-    CONSTRAINT fkey_vehicule_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE
+    CONSTRAINT fkey_vehicule_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_vehicule_type_engin FOREIGN KEY (type_engin) REFERENCES type_engin(nom) ON DELETE CASCADE
 );
 
 INSERT INTO vehicule(immatriculation, type_engin, id_centre)
@@ -33,29 +46,31 @@ CREATE TABLE compartiment
 (
     id SERIAL,
     nom TEXT,
-    CONSTRAINT pkey_compartiment PRIMARY KEY (id)
+    type_engin TEXT,
+    CONSTRAINT pkey_compartiment PRIMARY KEY (id),
+    CONSTRAINT fkey_compartiment_type_engin FOREIGN KEY (type_engin) REFERENCES type_engin(nom) ON DELETE CASCADE
 );
 
-INSERT INTO compartiment(nom)
-VALUES  ('Coffre haut "Capucine"'),
-        ('Paroi'),
-        ('Placard Kit'),
-        ('Rangements'),
-        ('Tiroir 1'),
-        ('Tiroir 2'),
-        ('Tiror Ventilation'),
-        ('Tiroir Insuflateur'),
-        ('Tiroir Accouchement'),
-        ('Les niveaux'),
-        ('Cabine avant conducteur'),
-        ('Porte latérale'),
-        ('Les essais'),
-        ('Carrosserie'),
-        ('1er gauche'),
-        ('2eme gauche'),
-        ('Plateau'),
-        ('Paroi droite (4)'),
-        ('Paroi milieu');
+INSERT INTO compartiment(nom, type_engin)
+VALUES  ('Coffre haut "Capucine"', 'VSAV'),
+        ('Paroi', 'VSAV'),
+        ('Placard Kit', 'VSAV'),
+        ('Rangements', 'VSAV'),
+        ('Tiroir 1', 'VSAV'),
+        ('Tiroir 2', 'VSAV'),
+        ('Tiror Ventilation', 'VSAV'),
+        ('Tiroir Insuflateur', 'VSAV'),
+        ('Tiroir Accouchement', 'VSAV'),
+        ('Les niveaux', 'VSAV'),
+        ('Cabine avant conducteur', 'VSAV'),
+        ('Porte latérale', 'VSAV'),
+        ('Les essais', 'VSAV'),
+        ('Carrosserie', 'VSAV'),
+        ('1er gauche', 'VSAV'),
+        ('2eme gauche', 'VSAV'),
+        ('Plateau', 'VSAV'),
+        ('Paroi droite (4)', 'VSAV'),
+        ('Paroi milieu', 'VSAV');
 
 CREATE TABLE materiel
 (
