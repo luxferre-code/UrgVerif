@@ -4,14 +4,16 @@ public class Compartiment {
     
     private final int ID;
     private String nom;
+    private String typeEngin;
 
-    public Compartiment(int iD, String nom) {
+    public Compartiment(int iD, String nom, String typeEngin) {
         ID = iD;
         this.nom = nom;
+        this.typeEngin = typeEngin;
     }
 
-    public Compartiment(String nom) {
-        this(-1, nom);
+    public Compartiment(String nom, String typeEngin) {
+        this(-1, nom, typeEngin);
     }
 
     public int getID() {
@@ -26,12 +28,21 @@ public class Compartiment {
         this.nom = nom;
     }
 
+    public String getTypeEngin() {
+        return typeEngin;
+    }
+
+    public void setTypeEngin(String typeEngin) {
+        this.typeEngin = typeEngin;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ID;
         result = prime * result + ((nom == null) ? 0 : nom.hashCode());
+        result = prime * result + ((typeEngin == null) ? 0 : typeEngin.hashCode());
         return result;
     }
 
@@ -51,12 +62,14 @@ public class Compartiment {
                 return false;
         } else if (!nom.equals(other.nom))
             return false;
+        if (typeEngin == null) {
+            if (other.typeEngin != null)
+                return false;
+        } else if (!typeEngin.equals(other.typeEngin))
+            return false;
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Compartiment [ID=" + ID + ", nom=" + nom + "]";
-    }
+    
 
 }

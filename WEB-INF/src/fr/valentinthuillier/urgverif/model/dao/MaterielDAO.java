@@ -68,6 +68,21 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return materiels;
     }
 
+    public boolean checkIfIsAlreadyAssignedToVehicule(String immatriculation, Compartiment compartiment, String nomMateriel) {
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM materiel WHERE id_vehicule = ? AND id_compartiment = ? AND nom = ?");
+            ps.setString(1, immatriculation);
+            ps.setInt(2, compartiment.getID());
+            ps.setString(3, nomMateriel);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch(Exception e) {
+            System.out.println("MaterielDAO.checkIfIsAlreadyAssignedToVehicule");
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
     @Override
     public Materiel findById(Integer id) {
         Materiel materiel = null;
@@ -95,14 +110,39 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
 
     @Override
     public Materiel save(Materiel dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO materiel(nom, quantite, id_compartiment, id_vehicule) VALUES(?, ?, ?, ?)");
+            ps.setString(1, dto.getNom());
+            ps.setInt(2, dto.getQuantite());
+            ps.setInt(3, dto.getCompartiment().getID());
+            ps.setString(4, dto.getVehicule().getImmatriculation());
+            ps.executeUpdate();
+            int id = ps.getGeneratedKeys().getInt(1);
+            return new Materiel(id, dto.getNom(), dto.getQuantite(), dto.getCompartiment(), dto.getVehicule());
+
+        } catch(Exception e) {
+            System.out.println("MaterielDAO.save");
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @Override
     public Materiel update(Materiel dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("UPDATE materiel SET nom = ?, quantite = ?, id_compartiment = ?, id_vehicule = ? WHERE id = ?");
+            ps.setString(1, dto.getNom());
+            ps.setInt(2, dto.getQuantite());
+            ps.setInt(3, dto.getCompartiment().getID());
+            ps.setString(4, dto.getVehicule().getImmatriculation());
+            ps.setInt(5, dto.getID());
+            ps.executeUpdate();
+            return dto;
+        } catch(Exception e) {
+            System.out.println("MaterielDAO.update");
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @Override

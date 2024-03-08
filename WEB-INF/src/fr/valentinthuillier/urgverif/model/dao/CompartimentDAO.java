@@ -16,11 +16,11 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     public Compartiment findById(Integer id) {
         Compartiment compartiment = null;
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT nom FROM compartiment WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT nom, type_engin FROM compartiment WHERE id = ?");
             ps.setInt(1, id.intValue());
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
-                compartiment = new Compartiment(id, rs.getString("nom"));
+                compartiment = new Compartiment(id, rs.getString("nom"), rs.getString("type_engin"));
             }
             ps.close();
         } catch(Exception e) {
@@ -33,11 +33,11 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     public List<Compartiment> findAllByVehicule(Vehicule vehicule) {
         List<Compartiment> compartiments = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT c.id, c.nom FROM compartiment c JOIN materiel m ON c.id = m.id_compartiment WHERE m.id_vehicule = ?");
-            ps.setString(1, vehicule.getImmatriculation());
+            PreparedStatement ps = con.prepareStatement("SELECT id, nom, type_engin FROM compartiment WHERE type_engin = ?");
+            ps.setString(1, vehicule.getTypeEngin());
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                compartiments.add(new Compartiment(rs.getInt("id"), rs.getString("nom")));
+                compartiments.add(new Compartiment(rs.getInt("id"), rs.getString("nom"), rs.getString("type_engin")));
             }
             ps.close();
         } catch(Exception e) {
@@ -51,10 +51,10 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     public List<Compartiment> findAll() {
         List<Compartiment> compartiments = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT id, nom FROM compartiment");
+            PreparedStatement ps = con.prepareStatement("SELECT id, nom, type_engin FROM compartiment");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                compartiments.add(new Compartiment(rs.getInt("id"), rs.getString("nom")));
+                compartiments.add(new Compartiment(rs.getInt("id"), rs.getString("nom"), rs.getString("type_engin")));
             }
             ps.close();
         } catch(Exception e) {
@@ -71,7 +71,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             ps.setString(1, dto.getNom());
             ps.executeUpdate();
             int id = ps.getGeneratedKeys().getInt(1);
-            compartiment = new Compartiment(id, dto.getNom());
+            compartiment = new Compartiment(id, dto.getNom(), dto.getTypeEngin());
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
@@ -81,7 +81,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     @Override
     public Compartiment update(Compartiment dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("UPDATE compartiment SET nom = ? WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE compartiment SET nom = ?, type_en WHERE id = ?");
             ps.setString(1, dto.getNom());
             ps.setInt(2, dto.getID());
             ps.executeUpdate();

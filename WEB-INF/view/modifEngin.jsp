@@ -15,7 +15,23 @@
 
     <section>
 
+        <h2>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</h2>
 
+        <form action="modifEngin" method="post">
+            <label for="compartiment">Compartiment: </label>
+            <select name="compartiment" id="compartiment" required>
+                <%
+                    for(Compartiment compartiment : new CompartimentDAO().findAllByVehicule(vehicule)) {
+                        out.println("<option value=\"" + compartiment.getID() + "\">" + compartiment.getNom() + "</option>");
+                } %>
+            </select>
+            <label for="libelle">Libellé: </label>
+            <input type="text" name="libelle" id="libelle" required>
+            <label for="quantite">Quantité: </label>
+            <input type="number" name="quantite" id="quantite" min="1" required>
+            <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
+            <input type="submit" value="Ajouter">
+        </form>
 
     </section>
     
