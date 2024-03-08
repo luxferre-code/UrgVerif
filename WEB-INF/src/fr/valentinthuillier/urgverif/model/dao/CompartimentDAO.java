@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.valentinthuillier.jeq.database.DS;
+import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Compartiment;
 
 public class CompartimentDAO implements IDao<Compartiment, Integer> {
