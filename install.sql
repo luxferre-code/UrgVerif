@@ -37,7 +37,25 @@ CREATE TABLE compartiment
 );
 
 INSERT INTO compartiment(nom)
-VALUES ('Coffre haut "Capucine"');
+VALUES  ('Coffre haut "Capucine"'),
+        ('Paroi'),
+        ('Placard Kit'),
+        ('Rangements'),
+        ('Tiroir 1'),
+        ('Tiroir 2'),
+        ('Tiror Ventilation'),
+        ('Tiroir Insuflateur'),
+        ('Tiroir Accouchement'),
+        ('Les niveaux'),
+        ('Cabine avant conducteur'),
+        ('Porte latérale'),
+        ('Les essais'),
+        ('Carrosserie'),
+        ('1er gauche'),
+        ('2eme gauche'),
+        ('Plateau'),
+        ('Paroi droite (4)'),
+        ('Paroi milieu');
 
 CREATE TABLE materiel
 (
@@ -59,18 +77,18 @@ CREATE TABLE verif_history
     id SERIAL,
     id_materiel INT,
     date_verif DATE DEFAULT CURRENT_DATE,
-    resultat TEXT,
+    time_verif TIME DEFAULT CURRENT_TIME,
     matricule TEXT,
     CONSTRAINT pkey_verif_history PRIMARY KEY (id),
     CONSTRAINT fkey_verif_history_materiel FOREIGN KEY (id_materiel) REFERENCES materiel(id) ON DELETE CASCADE
 );
 
-INSERT INTO verif_history(id_materiel, resultat)
-VALUES (1, 'OK', '00019459');
+INSERT INTO verif_history(id_materiel, matricule)
+VALUES (1, '00019459');
 
 -- Création d'une view qui permet de voir quand est-ce que chaque véhicule a été vérifié pour la dernière fois
 CREATE OR REPLACE VIEW last_verif AS
-SELECT vehicule.immatriculation, MAX(verif_history.date_verif) AS last_verif, verif_history.matricule
+SELECT vehicule.immatriculation, MAX(verif_history.date_verif) AS last_verif_date, MAX(verif_history.time_verif) AS last_verif_time, verif_history.matricule
 FROM vehicule
 LEFT JOIN materiel ON vehicule.immatriculation = materiel.id_vehicule
 LEFT JOIN verif_history ON materiel.id = verif_history.id_materiel
