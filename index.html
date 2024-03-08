@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <title>UrgVerif - Accueil</title>
+</head>
+<body>
+    
+    <header>
+        <h1>UrgVerif</h1>
+    </header>
+
+    <main>
+        <section id="presentation">
+            <h2>UrgVerif, c'est quoi ?</h2>
+            <p>
+                UrgVerif est une application web qui vous permet de vous facilitez la vérification de vos engins (VSAV, FPT, FSR, ...).
+                Pour accéder à la vérification d'un enfin, il vous suffit de rentrer le numéro d'immatriculation de l'engin et de cliquer sur "Vérifier".
+                Vous aurez alors accès à la liste des vérifications à effectuer sur l'engin.
+            </p>
+        </section>
+
+        <section>
+            <h2>Vérifier un engin</h2>
+            <form action="startVerif" method="post">
+                <label for="immat">Numéro d'immatriculation</label>
+                <input type="text" name="immat" id="immat" required>
+                <input type="submit" value="Vérifier">
+            </form>
+        </section>
+
+        <section>
+            <h2>Ajouter un engin ?</h2>
+            <p>
+                Vous souhaitez ajouter un engin à la base de données ? Cliquez <a href="addEngin">ici</a>.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 UrgVerif - Tous droits réservés</p>
+        <p>Made by <a href="https://valentin-thuillier.fr/">Valentin THUILLIER</a></p>
+    </footer>
+
+</body>
+</html>
