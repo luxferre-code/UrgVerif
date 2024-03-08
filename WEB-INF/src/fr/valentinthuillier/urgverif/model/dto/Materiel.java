@@ -105,4 +105,12 @@ public class Materiel {
                 + ", vehicule=" + vehicule + "]";
     }
 
+    public String toHTMLLine() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<tr onclick=\"window.location.href = \"turnDispo?idMateriel=\" + " + this.ID + ";\">");
+        sb.append("<td>").append(nom).append("</td>");
+        sb.append("<td>").append(quantite).append("</td>");
+        return sb.toString();
+    }
+
 }

@@ -24,6 +24,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             }
 
         } catch(Exception e) {
+            System.out.println("VehiculeDAO.findById");
             System.out.println(e.getMessage());
         }
         return vehicule;

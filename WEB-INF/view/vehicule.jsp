@@ -14,12 +14,25 @@
     <title><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></title>
 </head>
 <body>
+
     <p>Coucou !</p>
 
     <%
-        List<Materiel> matos = new MaterielDAO().findByVehicule(vehicule);
-        for(Materiel materiel : matos) { %>
-            <p><%= materiel %></p> <br>
+        Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);
+        for(Compartiment compartiment : matos.keySet()) { %>
+
+            <h2><%= compartiment.getNom() %></h2>
+
+            <table>
+                <tr>
+                    <th>Matériel</th>
+                    <th>Quantité</th>
+                </tr>
+
+            <% for(Materiel materiel : matos.get(compartiment)) { %>
+                <p><%= materiel.toHTMLLine() %></p> <br> 
+            <% } %>
+            </table>
         <% }
     %>
 

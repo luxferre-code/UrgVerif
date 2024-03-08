@@ -24,6 +24,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             }
             ps.close();
         } catch(Exception e) {
+            System.out.println("CompartimentDAO.findById");
             System.out.println(e.getMessage());
         }
         return compartiment;
@@ -32,7 +33,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     public List<Compartiment> findAllByVehicule(Vehicule vehicule) {
         List<Compartiment> compartiments = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT c.id, c.nom FROM compartiment c JOIN materiel m ON c.id = m.id_compartiment WHERE m.immatriculation_vehicule = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT c.id, c.nom FROM compartiment c JOIN materiel m ON c.id = m.id_compartiment WHERE m.id_vehicule = ?");
             ps.setString(1, vehicule.getImmatriculation());
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
@@ -40,6 +41,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             }
             ps.close();
         } catch(Exception e) {
+            System.out.println("CompartimentDAO.findAllByVehicule");
             System.out.println(e.getMessage());
         }
         return compartiments;
