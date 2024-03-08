@@ -86,16 +86,6 @@ public class Materiel {
             return false;
         if (quantite != other.quantite)
             return false;
-        if (compartiment == null) {
-            if (other.compartiment != null)
-                return false;
-        } else if (!compartiment.equals(other.compartiment))
-            return false;
-        if (vehicule == null) {
-            if (other.vehicule != null)
-                return false;
-        } else if (!vehicule.equals(other.vehicule))
-            return false;
         return true;
     }
 
@@ -105,9 +95,9 @@ public class Materiel {
                 + ", vehicule=" + vehicule + "]";
     }
 
-    public String toHTMLLine() {
+    public String toHTMLLine(boolean estPresent) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<tr onclick=\"window.location.href = \"turnDispo?idMateriel=\" + " + this.ID + ";\">");
+        sb.append("<tr onclick=\"window.location.href='?idMateriel=" + this.ID + "';\" class=\"" + (estPresent ? "" : "nonPresent") + "\">");
         sb.append("<td>").append(nom).append("</td>");
         sb.append("<td>").append(quantite).append("</td>");
         return sb.toString();

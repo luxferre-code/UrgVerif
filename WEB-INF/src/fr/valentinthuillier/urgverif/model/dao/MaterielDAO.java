@@ -13,7 +13,7 @@ import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MaterielDAO implements IDao<Materiel, Object[]> {
+public class MaterielDAO implements IDao<Materiel, Integer> {
 
     public List<Materiel> findByCompartimentAndVehicule(Integer compartimentId, String vehiculeId) {
         List<Materiel> materiels = new ArrayList<>();
@@ -69,9 +69,22 @@ public class MaterielDAO implements IDao<Materiel, Object[]> {
     }
 
     @Override
-    public Materiel findById(Object[] id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    public Materiel findById(Integer id) {
+        Materiel materiel = null;
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT nom, quantite, id_compartiment, id_vehicule FROM materiel WHERE id = ?");
+            ps.setInt(1, id.intValue());
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                Compartiment compartiment = new CompartimentDAO().findById(rs.getInt("id_compartiment"));
+                Vehicule vehicule = new VehiculeDAO().findById(rs.getString("id_vehicule"));
+                materiel = new Materiel(id, rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule);
+            }
+        } catch(Exception e) {
+            System.out.println("MaterielDAO.findById");
+            System.out.println(e.getMessage());
+        }
+        return materiel;
     }
 
     @Override

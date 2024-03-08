@@ -3,7 +3,9 @@ import java.io.IOException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 
+import fr.valentinthuillier.urgverif.model.dao.MaterielDAO;
 import fr.valentinthuillier.urgverif.model.dao.VehiculeDAO;
+import fr.valentinthuillier.urgverif.model.dto.Materiel;
 import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +15,28 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/startVerif")
 public class ImmatVerification extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idMateriel = req.getParameter("idMateriel");
+        if(idMateriel == null || idMateriel.isBlank()) {
+            req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=3").forward(req, resp);
+        }
+        int id = -1;
+        try { id = Integer.parseInt(idMateriel); }
+        catch(Exception e) {}
+        if(id != -1) {
+            MaterielDAO matDao = new MaterielDAO();
+            Materiel mat = matDao.findById(id);
+            if(mat == null) {
+                req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=3").forward(req, resp);
+            } else {
+                req.setAttribute("vehicule", mat.getVehicule());
+                req.setAttribute("materiel", mat);
+                req.getRequestDispatcher("/WEB-INF/view/vehicule.jsp").forward(req, resp);
+            }
+        }
+    }
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

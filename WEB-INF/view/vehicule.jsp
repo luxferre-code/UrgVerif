@@ -7,6 +7,17 @@
     if (vehicule == null) {
         request.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(request, response);
     }
+    List<Materiel> matosIndspo = session.getAttribute("matosIndspo") != null ? (List<Materiel>) session.getAttribute("matosIndspo") : new ArrayList<Materiel>();
+    Materiel mat = (Materiel) request.getAttribute("materiel");
+    if(mat != null) {
+        if(matosIndspo.contains(mat)) {
+            matosIndspo.remove(mat);
+        } else {
+            matosIndspo.add(mat);
+        }
+        session.setAttribute("matosIndspo", matosIndspo);
+    }
+    System.out.println(matosIndspo);
 %>
 <head>
     <meta charset="UTF-8"> <!-- TODO: a changer -->
@@ -30,7 +41,7 @@
                 </tr>
 
             <% for(Materiel materiel : matos.get(compartiment)) { %>
-                <p><%= materiel.toHTMLLine() %></p> <br> 
+                <%= materiel.toHTMLLine(!matosIndspo.contains(materiel)) %>
             <% } %>
             </table>
         <% }
