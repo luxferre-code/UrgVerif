@@ -45,5 +45,33 @@
         <p>Made by <a href="https://valentin-thuillier.fr/">Valentin THUILLIER</a></p>
     </footer>
 
+    <script>
+        // This script check if the immatriculation is valid
+        const immatInput = document.querySelector('form #immat');
+        const submitBtn = document.querySelector('form input[type="submit"]');
+        immatInput.addEventListener('input', () => {
+            const value = immatInput.value.replaceAll(' ', '').replaceAll('-', '').toUpperCase();
+            // Exemple: fr-941-yq -> FR941YQ
+            console.log(value);
+            if (immatInput.value.length > 0) {
+                if (!/^[A-Z]{2}[0-9]{3}[A-Z]{2}$/.test(value)) {
+                    submitBtn.setAttribute('disabled', 'disabled');
+                } else {
+                    console.log('ok');
+                    submitBtn.removeAttribute('disabled');
+                }
+            }
+        });
+        
+        submitBtn.addEventListener('click', () => {
+            immatInput.value = immatInput.value.replaceAll(' ', '').replaceAll('-', '').toUpperCase();
+            if (!/^[A-Z]{2}[0-9]{3}[A-Z]{2}$/.test(immatInput.value)) {
+                alert('Le numéro d\'immatriculation n\'est pas valide');
+                return false;
+            } 
+        });
+
+        </script>
+
 </body>
 </html>
