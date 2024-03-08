@@ -5,6 +5,10 @@
 
 <%
     Vehicule vehicule = (Vehicule) request.getAttribute("vehicule");
+    if(vehicule == null) {
+        response.sendRedirect("home");
+        return;
+    }
 %>
 
 <head>
