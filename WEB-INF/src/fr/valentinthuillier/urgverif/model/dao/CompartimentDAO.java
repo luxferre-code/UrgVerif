@@ -8,6 +8,7 @@ import java.util.List;
 
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Compartiment;
+import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 
 public class CompartimentDAO implements IDao<Compartiment, Integer> {
 
@@ -26,6 +27,22 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             System.out.println(e.getMessage());
         }
         return compartiment;
+    }
+
+    public List<Compartiment> findAllByVehicule(Vehicule vehicule) {
+        List<Compartiment> compartiments = new ArrayList<>();
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT c.id, c.nom FROM compartiment c JOIN materiel m ON c.id = m.id_compartiment WHERE m.immatriculation_vehicule = ?");
+            ps.setString(1, vehicule.getImmatriculation());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                compartiments.add(new Compartiment(rs.getInt("id"), rs.getString("nom")));
+            }
+            ps.close();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return compartiments;
     }
 
     @Override
