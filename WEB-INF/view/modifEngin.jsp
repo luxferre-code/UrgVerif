@@ -38,32 +38,67 @@
         </form>
 
     </section>
-    
+
+
     <section>
+
         <h2>Equipement(s) présent(s):</h2>
         <%
-            Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);
-            if(matos.isEmpty()) { %>
-                <p>Aucun équipement n'est présent dans ce véhicule.</p>
-            <% } else {
-                for(Compartiment compartiment : matos.keySet()) { %>
+            List<Compartiment> comparts = new CompartimentDAO().findAllByVehicule(vehicule);
+            for(Compartiment c : comparts) { 
+                out.println("<div id=\"c.getNom()\">"); %>
 
-                    <h2><%= compartiment.getNom() %></h2>
+                <h2><%= c.getNom() %></h2>
 
+                <%
+                List<Materiel> matos = new MaterielDAO().findByCompartimentAndVehicule(c.getID(), vehicule.getImmatriculation());
+                if(!matos.isEmpty()) { %>
                     <table>
                         <tr>
                             <th>Matériel</th>
                             <th>Quantité</th>
                         </tr>
-
-                    <% for(Materiel materiel : matos.get(compartiment)) { %>
-                        <%= materiel.toHTMLLine(true) %>
+    
+                    <% for(Materiel materiel : matos) { %>
+                        <%= materiel.toHTMLModifLine() %>
                     <% } %>
                     </table>
-                <% }
-            }
-        %>
+        
+                        
+                
+
+                    <form action="modifEngin" method="post">
+                        <% out.println("<input type=\"hidden\" name=\"compartiment\" value=\"" + c.getID() + "\" required>"); %>
+                        <label for="libelle">Libellé: </label>
+                        <input type="text" name="libelle" id="libelle" required>
+                        <label for="quantite">Quantité: </label>
+                        <input type="number" name="quantite" id="quantite" min="1" required>
+                        <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
+                        <input type="submit" value="Ajouter">
+                    </form>
+                    <% }   %>
+                </div>           
+            <% } %>
+
     </section>
+
+    <script>
+
+        const allBtnDelete = document.querySelectorAll('section table tr td .delete');
+        allBtnDelete.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(confirm('Voulez-vous vraiment supprimer ce matériel?')) {
+                    // Get id from value on the button
+                    const id = btn.value;
+                    <% 
+                    out.println("const immatriculation = \"" + vehicule.getImmatriculation() + "\";");
+                    out.println("window.location.href = `deleteMateriel?id=${id}&immatriculation=${immatriculation}`;");
+                    %>
+                }
+            });
+        });
+
+    </script>
 
 </body>
 </html>

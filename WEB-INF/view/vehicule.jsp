@@ -41,7 +41,7 @@
                 </tr>
 
             <% for(Materiel materiel : matos.get(compartiment)) { %>
-                <%= materiel.toHTMLLine(!matosIndspo.contains(materiel)) %>
+                <%= materiel.toHTMLLine(!matosIndspo.contains(materiel), true) %>
             <% } %>
             </table>
         <% }
@@ -50,7 +50,7 @@
     <form action="endVerif" method="post">
         <label for="matricule">Votre matricule: </label>
         <input type="text" name="matricule" id="matricule">
-        <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
+        <% out.println("<input type=\"hidden\" name=\"immatriculation\" value=\"" + vehicule.getImmatriculation() + "\">");
         <input type="submit" value="Valider">
     </form>
 

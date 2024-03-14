@@ -38,6 +38,13 @@
             </p>
         </section>
 
+        <section>
+            <h2>Modifier un engin ?</h2>
+            <p>
+                Vous souhaitez modifer un engin ? Cliquez <a href="modifEngin">ici</a>.
+            </p>
+        </section>
+
     </main>
 
     <footer>

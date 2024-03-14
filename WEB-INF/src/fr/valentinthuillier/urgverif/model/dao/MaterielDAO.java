@@ -147,8 +147,16 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
 
     @Override
     public boolean delete(Materiel dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("DELETE FROM materiel WHERE id = ?");
+            ps.setInt(1, dto.getID());
+            ps.executeUpdate();
+            return true;
+        } catch(Exception e) {
+            System.out.println("MaterielDAO.delete");
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
     
 

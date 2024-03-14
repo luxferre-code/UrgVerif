@@ -1,3 +1,4 @@
+package fr.valentinthuillier.urgverif.controls;
 import java.io.IOException;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -45,6 +46,7 @@ public class ModifEngin extends HttpServlet {
             System.out.println("ModifEngin : parsing error");
             req.setAttribute("erreur", "Erreur de saisie");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+            return;
         }
 
         Vehicule vehicule = new VehiculeDAO().findById(immatriculation);
@@ -52,7 +54,7 @@ public class ModifEngin extends HttpServlet {
 
         if(vehicule == null) {
             req.setAttribute("erreur", "Véhicule non trouvé");
-            req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/view/modifEnginForm.jsp").forward(req, resp);
             return;
         }
 
@@ -83,7 +85,26 @@ public class ModifEngin extends HttpServlet {
         new MaterielDAO().save(new Materiel(libelle, quantite, compartiment, vehicule));
         req.setAttribute("vehicule", vehicule);
         req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String immatriculation = req.getParameter("immatriculation");
+        if(immatriculation == null || immatriculation.isBlank()) {
+            req.getRequestDispatcher("/WEB-INF/view/modifEnginForm.jsp").forward(req, resp);
+        }
+        CharSequenceTranslator cst = StringEscapeUtils.ESCAPE_HTML4;
+        immatriculation = cst.translate(immatriculation);
+        
+        Vehicule vehicule = new VehiculeDAO().findById(immatriculation);
+        if(vehicule == null) {
+            req.setAttribute("erreur", "Véhicule non trouvé");
+            req.getRequestDispatcher("/WEB-INF/view/modifEnginForm.jsp").forward(req, resp);
+            return;
+        }
+
+        req.setAttribute("vehicule", vehicule);
+        req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
     }
 
 }

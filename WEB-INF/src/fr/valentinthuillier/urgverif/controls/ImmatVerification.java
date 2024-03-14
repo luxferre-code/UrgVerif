@@ -1,3 +1,4 @@
+package fr.valentinthuillier.urgverif.controls;
 import java.io.IOException;
 
 import org.apache.commons.text.StringEscapeUtils;
