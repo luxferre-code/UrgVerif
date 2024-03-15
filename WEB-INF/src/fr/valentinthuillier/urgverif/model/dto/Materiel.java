@@ -109,7 +109,7 @@ public class Materiel {
         sb.append("<tr>");
         sb.append("<td>").append(nom).append("</td>");
         sb.append("<td>").append(quantite).append("</td>");
-        sb.append("<td><button class=\"delete\" type=\"submit\" name=\"idMateriel\" value=\"").append(this.ID).append("\">Supprimer</button></td>");
+        sb.append("<td><button class=\"delete\" type=\"submit\" name=\"idMateriel\" value=\"").append(this.ID).append("\">Oui</button></td>");
         sb.append("</tr>");
         return sb.toString();
     }

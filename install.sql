@@ -39,9 +39,6 @@ CREATE TABLE vehicule
     CONSTRAINT fkey_vehicule_type_engin FOREIGN KEY (type_engin) REFERENCES type_engin(nom) ON DELETE CASCADE
 );
 
-INSERT INTO vehicule(immatriculation, type_engin, id_centre)
-VALUES ('FR941YQ', 'VSAV', 1);
-
 CREATE TABLE compartiment
 (
     id SERIAL,
@@ -52,10 +49,11 @@ CREATE TABLE compartiment
 );
 
 INSERT INTO compartiment(nom, type_engin)
-VALUES  ('Coffre haut "Capucine"', 'VSAV'),
+VALUES  ('Coffre haut &quot;Capucine&quot;', 'VSAV'),
         ('Paroi', 'VSAV'),
         ('Placard Kit', 'VSAV'),
         ('Rangements', 'VSAV'),
+        ('DSA', 'VSAV'),
         ('Tiroir 1', 'VSAV'),
         ('Tiroir 2', 'VSAV'),
         ('Tiror Ventilation', 'VSAV'),
@@ -84,9 +82,6 @@ CREATE TABLE materiel
     CONSTRAINT fkey_materiel_vehicule FOREIGN KEY (id_vehicule) REFERENCES vehicule(immatriculation) ON DELETE CASCADE
 );
 
-INSERT INTO materiel(id_compartiment, id_vehicule, nom, quantite)
-VALUES (1, 'FR941YQ', 'Draps UU', 6);
-
 CREATE TABLE verif_history
 (
     id SERIAL,
@@ -94,12 +89,10 @@ CREATE TABLE verif_history
     date_verif DATE DEFAULT CURRENT_DATE,
     time_verif TIME DEFAULT CURRENT_TIME,
     matricule TEXT,
+    ok BOOLEAN,
     CONSTRAINT pkey_verif_history PRIMARY KEY (id),
     CONSTRAINT fkey_verif_history_materiel FOREIGN KEY (id_materiel) REFERENCES materiel(id) ON DELETE CASCADE
 );
-
-INSERT INTO verif_history(id_materiel, matricule)
-VALUES (1, '00019459');
 
 -- Création d'une view qui permet de voir quand est-ce que chaque véhicule a été vérifié pour la dernière fois
 CREATE OR REPLACE VIEW last_verif AS
@@ -108,3 +101,6 @@ FROM vehicule
 LEFT JOIN materiel ON vehicule.immatriculation = materiel.id_vehicule
 LEFT JOIN verif_history ON materiel.id = verif_history.id_materiel
 GROUP BY vehicule.immatriculation, verif_history.matricule;
+
+\! echo "Database created successfully!"
+\! echo "You can install default values to a VSAV with install_vsav.sql" 

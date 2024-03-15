@@ -13,40 +13,17 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/modif.css">
     <title>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</title>
 </head>
 <body>
+    <h1>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</h1>
 
     <section>
-
-        <h2>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</h2>
-
-        <form action="modifEngin" method="post">
-            <label for="compartiment">Compartiment: </label>
-            <select name="compartiment" id="compartiment" required>
-                <%
-                    for(Compartiment compartiment : new CompartimentDAO().findAllByVehicule(vehicule)) {
-                        out.println("<option value=\"" + compartiment.getID() + "\">" + compartiment.getNom() + "</option>");
-                } %>
-            </select>
-            <label for="libelle">Libellé: </label>
-            <input type="text" name="libelle" id="libelle" required>
-            <label for="quantite">Quantité: </label>
-            <input type="number" name="quantite" id="quantite" min="1" required>
-            <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
-            <input type="submit" value="Ajouter">
-        </form>
-
-    </section>
-
-
-    <section>
-
-        <h2>Equipement(s) présent(s):</h2>
         <%
             List<Compartiment> comparts = new CompartimentDAO().findAllByVehicule(vehicule);
             for(Compartiment c : comparts) { 
-                out.println("<div id=\"c.getNom()\">"); %>
+                out.println("<div id=\"" + c.getNom().replaceAll(" ", "") + "\">"); %>
 
                 <h2><%= c.getNom() %></h2>
 
@@ -57,16 +34,14 @@
                         <tr>
                             <th>Matériel</th>
                             <th>Quantité</th>
+                            <th>Supprimer ?</th>
                         </tr>
     
                     <% for(Materiel materiel : matos) { %>
                         <%= materiel.toHTMLModifLine() %>
                     <% } %>
                     </table>
-        
-                        
-                
-
+                <% }   %>
                     <form action="modifEngin" method="post">
                         <% out.println("<input type=\"hidden\" name=\"compartiment\" value=\"" + c.getID() + "\" required>"); %>
                         <label for="libelle">Libellé: </label>
@@ -76,7 +51,7 @@
                         <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
                         <input type="submit" value="Ajouter">
                     </form>
-                    <% }   %>
+                    
                 </div>           
             <% } %>
 

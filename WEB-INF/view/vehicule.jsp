@@ -25,8 +25,8 @@
     <title><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></title>
 </head>
 <body>
+    <h1><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></h1>
 
-    <p>Coucou !</p>
 
     <%
         Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);
@@ -50,7 +50,7 @@
     <form action="endVerif" method="post">
         <label for="matricule">Votre matricule: </label>
         <input type="text" name="matricule" id="matricule">
-        <% out.println("<input type=\"hidden\" name=\"immatriculation\" value=\"" + vehicule.getImmatriculation() + "\">");
+        <% out.println("<input type=\"hidden\" name=\"immatriculation\" value=\"" + vehicule.getImmatriculation() + "\">"); %>
         <input type="submit" value="Valider">
     </form>
 
