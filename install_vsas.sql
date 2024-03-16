@@ -127,6 +127,4 @@ SELECT id_compartiment, 'FR941YQ', nom, quantite
 FROM materiel
 WHERE id_vehicule = 'vsav';
 
-
-
 \! echo "Default values for VSAV installed successfully!"

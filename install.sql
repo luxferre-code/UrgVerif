@@ -85,22 +85,24 @@ CREATE TABLE materiel
 CREATE TABLE verif_history
 (
     id SERIAL,
-    id_materiel INT,
+    immatriculation TEXT,
     date_verif DATE DEFAULT CURRENT_DATE,
     time_verif TIME DEFAULT CURRENT_TIME,
     matricule TEXT,
-    ok BOOLEAN,
     CONSTRAINT pkey_verif_history PRIMARY KEY (id),
-    CONSTRAINT fkey_verif_history_materiel FOREIGN KEY (id_materiel) REFERENCES materiel(id) ON DELETE CASCADE
+    CONSTRAINT fkey_verif_history_immatriculation FOREIGN KEY (immatriculation) REFERENCES vehicule(immatriculation) ON DELETE CASCADE 
 );
 
 -- Création d'une view qui permet de voir quand est-ce que chaque véhicule a été vérifié pour la dernière fois
 CREATE OR REPLACE VIEW last_verif AS
-SELECT vehicule.immatriculation, MAX(verif_history.date_verif) AS last_verif_date, MAX(verif_history.time_verif) AS last_verif_time, verif_history.matricule
-FROM vehicule
-LEFT JOIN materiel ON vehicule.immatriculation = materiel.id_vehicule
-LEFT JOIN verif_history ON materiel.id = verif_history.id_materiel
-GROUP BY vehicule.immatriculation, verif_history.matricule;
+SELECT immatriculation, date_verif, time_verif, matricule
+FROM verif_history
+WHERE (immatriculation, date_verif, time_verif) IN
+(
+    SELECT immatriculation, MAX(date_verif), MAX(time_verif)
+    FROM verif_history
+    GROUP BY immatriculation
+);
 
 \! echo "Database created successfully!"
 \! echo "You can install default values to a VSAV with install_vsav.sql" 
