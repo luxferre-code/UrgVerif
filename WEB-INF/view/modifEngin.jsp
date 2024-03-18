@@ -17,19 +17,22 @@
     <title>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</title>
 </head>
 <body>
+    <%
+        long start = System.currentTimeMillis();
+    %>
     <h1>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</h1>
 
     <section>
         <%
+            Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);
             List<Compartiment> comparts = new CompartimentDAO().findAllByVehicule(vehicule);
-            for(Compartiment c : comparts) { 
+            for(Compartiment c : matos.keySet()){ 
                 out.println("<div id=\"" + c.getNom().replaceAll(" ", "") + "\">"); %>
 
                 <h2><%= c.getNom() %></h2>
 
                 <%
-                List<Materiel> matos = new MaterielDAO().findByCompartimentAndVehicule(c.getID(), vehicule.getImmatriculation());
-                if(!matos.isEmpty()) { %>
+                if(!matos.get(c).isEmpty()) { %>
                     <table>
                         <tr>
                             <th>Matériel</th>
@@ -37,7 +40,7 @@
                             <th>Supprimer ?</th>
                         </tr>
     
-                    <% for(Materiel materiel : matos) { %>
+                    <% for(Materiel materiel : matos.get(c)) { %>
                         <%= materiel.toHTMLModifLine() %>
                     <% } %>
                     </table>
@@ -74,6 +77,11 @@
         });
 
     </script>
+
+    <%
+    long end = System.currentTimeMillis();
+    out.println("<p>Page générée en " + (end - start) + "ms</p>");
+    %>
 
 </body>
 </html>
