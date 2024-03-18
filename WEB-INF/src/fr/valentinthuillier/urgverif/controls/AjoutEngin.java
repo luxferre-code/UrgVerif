@@ -67,6 +67,7 @@ public class AjoutEngin extends HttpServlet {
         }
         Vehicule v = new Vehicule(immatriculation, typeEngin, centre);
         dao.save(v);
+        dao.affect(v);
         req.setAttribute("vehicule", v);
         req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
     }

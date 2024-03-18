@@ -81,7 +81,17 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
-    
 
+    public void affect(Vehicule v) {
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO materiel(id_compartiment, id_vehicule, nom, quantite) SELECT id_compartiment, ?, nom, quantite FROM materiel WHERE id_vehicule = ?");
+            ps.setString(1, v.getImmatriculation());
+            ps.setString(2, v.getTypeEngin().toLowerCase());
+            ps.executeUpdate();
+        } catch(Exception e) {
+            System.out.println("VehiculeDAO.affect");
+            System.out.println(e.getMessage());
+        }
+    }
 
 }
