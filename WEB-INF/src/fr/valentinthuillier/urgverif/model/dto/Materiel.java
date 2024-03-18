@@ -7,17 +7,19 @@ public class Materiel {
     private int quantite;
     private Compartiment compartiment;
     private Vehicule vehicule;
+    private boolean valide;
 
-    public Materiel(int iD, String nom, int quantite, Compartiment compartiment, Vehicule vehicule) {
+    public Materiel(int iD, String nom, int quantite, Compartiment compartiment, Vehicule vehicule, boolean valide) {
         ID = iD;
         this.nom = nom;
         this.quantite = quantite;
         this.compartiment = compartiment;
         this.vehicule = vehicule;
+        this.valide = valide;
     }
 
-    public Materiel(String nom, int quantite, Compartiment compartiment, Vehicule vehicule) {
-        this(-1, nom, quantite, compartiment, vehicule);
+    public Materiel(String nom, int quantite, Compartiment compartiment, Vehicule vehicule, boolean valide) {
+        this(-1, nom, quantite, compartiment, vehicule, valide);
     }
 
     public int getID() {
@@ -56,6 +58,14 @@ public class Materiel {
         this.vehicule = vehicule;
     }
 
+    public void setValide(boolean valide) {
+        this.valide = valide;
+    }
+
+    public boolean getValide() {
+        return this.valide;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -65,6 +75,7 @@ public class Materiel {
         result = prime * result + quantite;
         result = prime * result + ((compartiment == null) ? 0 : compartiment.hashCode());
         result = prime * result + ((vehicule == null) ? 0 : vehicule.hashCode());
+        result = prime * result + (valide ? 1231 : 1237);
         return result;
     }
 
@@ -86,19 +97,19 @@ public class Materiel {
             return false;
         if (quantite != other.quantite)
             return false;
-        return true;
+        return this.valide == other.valide;
     }
 
     @Override
     public String toString() {
         return "Materiel [ID=" + ID + ", nom=" + nom + ", quantite=" + quantite + ", compartiment=" + compartiment
-                + ", vehicule=" + vehicule + "]";
+                + ", vehicule=" + vehicule + ", valide=" + this.valide + "]";
     }
 
-    public String toHTMLLine(boolean estPresent, boolean onClickActive) {
+    public String toHTMLLine(boolean onClickActive) {
         StringBuilder sb = new StringBuilder();
         String onClick = onClickActive ? "onclick=\"window.location.href='?idMateriel=" + this.ID + "';\" " : "";
-        sb.append("<tr " + onClick + "class=\"" + (estPresent ? "" : "nonPresent") + "\">");
+        sb.append("<tr " + onClick + "class=\"" + (!this.valide ? "nonPresent" : "") + "\">");
         sb.append("<td>").append(nom).append("</td>");
         sb.append("<td>").append(quantite).append("</td>");
         return sb.toString();

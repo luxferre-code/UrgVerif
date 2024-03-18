@@ -1,3 +1,5 @@
+package fr.valentinthuillier.urgverif.controls;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -28,8 +30,15 @@ public class EndVerif extends HttpServlet {
         }
         MaterielDAO dao = new MaterielDAO();
         for(Materiel m : matosIndspo) {
-
+            m.setValide(false);
+            if(dao.update(m) == null) {
+                req.setAttribute("erreur", "Erreur lors de la mise à jour");
+                req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+                return;
+            }
         }
+        session.removeAttribute("matosIndspo");
+        req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
     }
 
 }

@@ -32,11 +32,14 @@ public class ImmatVerification extends HttpServlet {
             if(mat == null) {
                 req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=3").forward(req, resp);
             } else {
+                mat.setValide(!mat.getValide());
                 req.setAttribute("vehicule", mat.getVehicule());
-                req.setAttribute("materiel", mat);
+                matDao.update(mat);
                 req.getRequestDispatcher("/WEB-INF/view/vehicule.jsp").forward(req, resp);
             }
         }
+        // Affiche le temps en milisecondes pour tester la vitesse de la base de données
+        // 
     }
     
     @Override

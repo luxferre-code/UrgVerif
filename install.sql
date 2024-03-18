@@ -77,6 +77,7 @@ CREATE TABLE materiel
     id_vehicule VARCHAR(7),
     nom TEXT,
     quantite INT,
+    valide BOOLEAN DEFAULT TRUE,
     CONSTRAINT pkey_materiel PRIMARY KEY (id),
     CONSTRAINT fkey_materiel_compartiment FOREIGN KEY (id_compartiment) REFERENCES compartiment(id) ON DELETE CASCADE,
     CONSTRAINT fkey_materiel_vehicule FOREIGN KEY (id_vehicule) REFERENCES vehicule(immatriculation) ON DELETE CASCADE

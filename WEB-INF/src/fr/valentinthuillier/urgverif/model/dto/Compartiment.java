@@ -70,6 +70,9 @@ public class Compartiment {
         return true;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Compartiment [ID=" + ID + ", nom=" + nom + ", typeEngin=" + typeEngin + "]";
+    }
 
 }

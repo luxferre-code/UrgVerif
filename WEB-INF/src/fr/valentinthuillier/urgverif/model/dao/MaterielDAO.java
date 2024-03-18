@@ -27,12 +27,12 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             if(compartiment == null || vehicule == null) {
                 throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: compartiment or vehicule is null");
             }
-            PreparedStatement ps = con.prepareStatement("SELECT id, nom, quantite FROM materiel WHERE id_compartiment = ? AND id_vehicule = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT id, nom, quantite, valide FROM materiel WHERE id_compartiment = ? AND id_vehicule = ?");
             ps.setInt(1, compartiment.getID());
             ps.setString(2, vehicule.getImmatriculation());
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                Materiel materiel = new Materiel(rs.getInt("id"), rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule);
+                Materiel materiel = new Materiel(rs.getInt("id"), rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule, rs.getBoolean("valide"));
                 materiels.add(materiel);
             }
 
@@ -49,17 +49,33 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             if(vehicule == null) {
                 throw new IllegalArgumentException("MaterielDAO.findByVehicule: vehicule is null");
             }
-            PreparedStatement ps = con.prepareStatement("SELECT id, nom, quantite, id_compartiment FROM materiel WHERE id_vehicule = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT id, nom, quantite, id_compartiment, valide FROM materiel WHERE id_vehicule = ?");
             ps.setString(1, vehicule.getImmatriculation());
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                Compartiment compartiment = new CompartimentDAO().findById(rs.getInt("id_compartiment"));
-                Materiel materiel = new Materiel(rs.getInt("id"), rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule);
-                if (!materiels.containsKey(compartiment)) {
-                    materiels.put(compartiment, new ArrayList<>());
-                }
-                materiels.get(compartiment).add(materiel);
+
+            Map<Integer, Compartiment> ids = new HashMap<>();
+            for(Compartiment compartiment : new CompartimentDAO().findAllByVehicule(vehicule)) {
+                System.out.println(compartiment);
+                materiels.put(compartiment, new ArrayList<>());
+                ids.put(compartiment.getID(), compartiment);
             }
+
+            while(rs.next()) {
+                Materiel materiel = new Materiel(rs.getInt("id"), rs.getString("nom"), rs.getInt("quantite"), ids.get(rs.getInt("id_compartiment")), vehicule, rs.getBoolean("valide"));
+                materiels.get(ids.get(rs.getInt("id_compartiment"))).add(materiel);
+            }
+
+            // Enleve les compartiments sans materiels
+            List<Compartiment> toRm = new ArrayList<>();
+            for(Compartiment compartiment : materiels.keySet()) {
+                if(materiels.get(compartiment).isEmpty()) {
+                    toRm.add(compartiment);
+                }
+            }
+            for(Compartiment compartiment : toRm) {
+                materiels.remove(compartiment);
+            }
+
         } catch(Exception e) {
             System.out.println("MaterielDAO.findByVehicule");
             System.out.println(e.getMessage());
@@ -87,13 +103,13 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
     public Materiel findById(Integer id) {
         Materiel materiel = null;
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT nom, quantite, id_compartiment, id_vehicule FROM materiel WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT nom, quantite, id_compartiment, id_vehicule, valide FROM materiel WHERE id = ?");
             ps.setInt(1, id.intValue());
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 Compartiment compartiment = new CompartimentDAO().findById(rs.getInt("id_compartiment"));
                 Vehicule vehicule = new VehiculeDAO().findById(rs.getString("id_vehicule"));
-                materiel = new Materiel(id, rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule);
+                materiel = new Materiel(id, rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule, rs.getBoolean("valide"));
             }
         } catch(Exception e) {
             System.out.println("MaterielDAO.findById");
@@ -111,14 +127,15 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
     @Override
     public Materiel save(Materiel dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO materiel(nom, quantite, id_compartiment, id_vehicule) VALUES(?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO materiel(nom, quantite, id_compartiment, id_vehicule, valide) VALUES(?, ?, ?, ?, ?)");
             ps.setString(1, dto.getNom());
             ps.setInt(2, dto.getQuantite());
             ps.setInt(3, dto.getCompartiment().getID());
             ps.setString(4, dto.getVehicule().getImmatriculation());
+            ps.setBoolean(5, dto.getValide());
             ps.executeUpdate();
             int id = ps.getGeneratedKeys().getInt(1);
-            return new Materiel(id, dto.getNom(), dto.getQuantite(), dto.getCompartiment(), dto.getVehicule());
+            return new Materiel(id, dto.getNom(), dto.getQuantite(), dto.getCompartiment(), dto.getVehicule(), dto.getValide());
 
         } catch(Exception e) {
             System.out.println("MaterielDAO.save");
@@ -130,12 +147,13 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
     @Override
     public Materiel update(Materiel dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("UPDATE materiel SET nom = ?, quantite = ?, id_compartiment = ?, id_vehicule = ? WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE materiel SET nom = ?, quantite = ?, id_compartiment = ?, id_vehicule = ?, valide = ? WHERE id = ?");
             ps.setString(1, dto.getNom());
             ps.setInt(2, dto.getQuantite());
             ps.setInt(3, dto.getCompartiment().getID());
             ps.setString(4, dto.getVehicule().getImmatriculation());
-            ps.setInt(5, dto.getID());
+            ps.setBoolean(5, dto.getValide());
+            ps.setInt(6, dto.getID());
             ps.executeUpdate();
             return dto;
         } catch(Exception e) {

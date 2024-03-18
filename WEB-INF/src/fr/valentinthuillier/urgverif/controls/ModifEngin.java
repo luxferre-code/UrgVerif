@@ -82,7 +82,7 @@ public class ModifEngin extends HttpServlet {
             return;
         }
 
-        new MaterielDAO().save(new Materiel(libelle, quantite, compartiment, vehicule));
+        new MaterielDAO().save(new Materiel(libelle, quantite, compartiment, vehicule, true));
         req.setAttribute("vehicule", vehicule);
         req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
     }

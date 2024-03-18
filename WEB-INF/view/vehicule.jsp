@@ -7,17 +7,6 @@
     if (vehicule == null) {
         request.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(request, response);
     }
-    List<Materiel> matosIndspo = session.getAttribute("matosIndspo") != null ? (List<Materiel>) session.getAttribute("matosIndspo") : new ArrayList<Materiel>();
-    Materiel mat = (Materiel) request.getAttribute("materiel");
-    if(mat != null) {
-        if(matosIndspo.contains(mat)) {
-            matosIndspo.remove(mat);
-        } else {
-            matosIndspo.add(mat);
-        }
-        session.setAttribute("matosIndspo", matosIndspo);
-    }
-    System.out.println(matosIndspo);
 %>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +14,9 @@
     <title><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></title>
 </head>
 <body>
+    <%
+        long start = System.currentTimeMillis();
+    %>
     <h1><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></h1>
 
 
@@ -41,7 +33,7 @@
                 </tr>
 
             <% for(Materiel materiel : matos.get(compartiment)) { %>
-                <%= materiel.toHTMLLine(!matosIndspo.contains(materiel), true) %>
+                <%= materiel.toHTMLLine(true) %>
             <% } %>
             </table>
         <% }
@@ -53,6 +45,11 @@
         <% out.println("<input type=\"hidden\" name=\"immatriculation\" value=\"" + vehicule.getImmatriculation() + "\">"); %>
         <input type="submit" value="Valider">
     </form>
+
+    <%
+        long end = System.currentTimeMillis();
+        out.println("<p>Page générée en " + (end - start) + "ms</p>");
+    %>
 
 </body>
 </html>
