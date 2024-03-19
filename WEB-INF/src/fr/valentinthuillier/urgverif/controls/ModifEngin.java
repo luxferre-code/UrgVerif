@@ -26,13 +26,50 @@ public class ModifEngin extends HttpServlet {
         String quantiteStr = req.getParameter("quantite");
         String immatriculation = req.getParameter("immatriculation");
 
+        CharSequenceTranslator cst = StringEscapeUtils.ESCAPE_HTML4;
+
+        if(compartimentStr != null && immatriculation != null && libelle == null && quantiteStr == null) {
+            // Ajout d'un compartiment
+            System.out.println("Ajout d'un compartiment");
+            compartimentStr = cst.translate(compartimentStr);
+            immatriculation = cst.translate(immatriculation);
+            if(compartimentStr.isBlank() || immatriculation.isBlank()) {
+                System.out.println("ModifEngin : compartimentStr or immatriculation is blank");
+                req.setAttribute("erreur", "Veuillez remplir tous les champs");
+                req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+                return;
+            }
+            Vehicule v = new VehiculeDAO().findById(immatriculation);
+            if(v == null) {
+                System.out.println("ModifEngin : vehicule not found");
+                req.setAttribute("erreur", "Véhicule non trouvé");
+                req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+                return;
+            }
+            Compartiment c = new Compartiment(compartimentStr, v.getTypeEngin());
+            System.out.println(c);
+            c = new CompartimentDAO().save(c);
+            System.out.println("Saved: " + c);
+            if(c != null) {
+                System.out.println("ModifEngin : compartiment added");
+                new MaterielDAO().save(new Materiel("Rien", 0, c, v, true));
+                req.setAttribute("vehicule", v);
+                req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+                return;
+            } else {
+                System.out.println("ModifEngin : compartiment not added");
+                req.setAttribute("erreur", "Erreur lors de l'ajout du compartiment");
+                req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
+                return;
+            }
+        }
+
         if(compartimentStr == null || compartimentStr.isBlank() || libelle == null || libelle.isBlank() || quantiteStr == null || quantiteStr.isBlank() || immatriculation == null || immatriculation.isBlank()) {
             req.setAttribute("erreur", "Veuillez remplir tous les champs");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
         }
 
-        CharSequenceTranslator cst = StringEscapeUtils.ESCAPE_HTML4;
         libelle = cst.translate(libelle);
         immatriculation = cst.translate(immatriculation);
 

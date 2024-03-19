@@ -7,6 +7,15 @@
     <title>UrgVerif - Accueil</title>
 </head>
 <body>
+
+    <%
+        String erreur = (String) request.getAttribute("erreur");
+        if(erreur != null) { %>
+            <script>
+                <% out.println("alert('" + erreur + "');"); %>
+            </script>
+        <% }
+    %>
     
     <header>
         <h1>UrgVerif</h1>

@@ -6,6 +6,7 @@ VALUES ('vsav', 'VSAV', 1),
 
 DELETE FROM materiel WHERE id_vehicule = 'vsav';
 
+-- Materiel de base pour VSAV
 INSERT INTO materiel(id_compartiment, id_vehicule, nom, quantite)
 VALUES (1, 'vsav', 'Bassin de lit', 1),
 (1, 'vsav', 'Sacs pour bassin', 2),

@@ -36,8 +36,7 @@
                 <%= materiel.toHTMLLine(true) %>
             <% } %>
             </table>
-        <% }
-    %>
+        <% } %>
 
     <form action="endVerif" method="post">
         <label for="matricule">Votre matricule: </label>

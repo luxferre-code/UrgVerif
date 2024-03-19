@@ -3,6 +3,7 @@ package fr.valentinthuillier.urgverif.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,11 +68,14 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     public Compartiment save(Compartiment dto) {
         Compartiment compartiment = null;
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO compartiment(nom) VALUES(?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO compartiment(nom, type_engin) VALUES (?, ?)");
             ps.setString(1, dto.getNom());
+            ps.setString(2, dto.getTypeEngin());
             ps.executeUpdate();
-            int id = ps.getGeneratedKeys().getInt(1);
-            compartiment = new Compartiment(id, dto.getNom(), dto.getTypeEngin());
+            ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next()) {
+                compartiment = new Compartiment(rs.getInt(1), dto.getNom(), dto.getTypeEngin());
+            }
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }

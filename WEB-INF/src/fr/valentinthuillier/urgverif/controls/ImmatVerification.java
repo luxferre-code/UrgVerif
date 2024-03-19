@@ -21,7 +21,8 @@ public class ImmatVerification extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idMateriel = req.getParameter("idMateriel");
         if(idMateriel == null || idMateriel.isBlank()) {
-            req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=3").forward(req, resp);
+            req.setAttribute("erreur", "Identifiant vide !");
+            req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
         }
         int id = -1;
         try { id = Integer.parseInt(idMateriel); }
@@ -30,7 +31,8 @@ public class ImmatVerification extends HttpServlet {
             MaterielDAO matDao = new MaterielDAO();
             Materiel mat = matDao.findById(id);
             if(mat == null) {
-                req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=3").forward(req, resp);
+                req.setAttribute("erreur", "Materiel introuvable");
+                req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
             } else {
                 mat.setValide(!mat.getValide());
                 req.setAttribute("vehicule", mat.getVehicule());
@@ -38,22 +40,22 @@ public class ImmatVerification extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/view/vehicule.jsp").forward(req, resp);
             }
         }
-        // Affiche le temps en milisecondes pour tester la vitesse de la base de données
-        // 
     }
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String immatriculation = req.getParameter("immat");
         if(immatriculation == null || immatriculation.isBlank()) {
-            req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=1").forward(req, resp);
+            req.setAttribute("erreur", "Immatriculation vide !");
+            req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
         }
         CharSequenceTranslator cst = StringEscapeUtils.ESCAPE_HTML4;
         immatriculation = cst.translate(immatriculation);
         VehiculeDAO dao = new VehiculeDAO();
         Vehicule vehicule = dao.findById(immatriculation);
         if(vehicule == null) {
-            req.getRequestDispatcher("/WEB-INF/view/index.jsp?error=2").forward(req, resp);
+            req.setAttribute("erreur", "Véhicule introuvable");
+            req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
         } else {
             req.setAttribute("vehicule", vehicule);
             req.getRequestDispatcher("/WEB-INF/view/vehicule.jsp").forward(req, resp);

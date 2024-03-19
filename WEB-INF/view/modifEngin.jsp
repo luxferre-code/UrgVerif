@@ -4,6 +4,15 @@
 <%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*" %>
 
 <%
+    String erreur = (String) request.getAttribute("erreur");
+    if(erreur != null) { %>
+        System.out.println(erreur);
+        request.getRequestDispatcher("home").forward(request, response);
+        return;
+    <% }
+%>
+
+<%
     Vehicule vehicule = (Vehicule) request.getAttribute("vehicule");
     if(vehicule == null) {
         response.sendRedirect("home");
@@ -22,29 +31,35 @@
     %>
     <h1>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</h1>
 
+    <p>
+        Bienvenur sur la page de modification du <%= vehicule.getTypeEngin() %> immatriculé <%= vehicule.getImmatriculation() %> !<br>
+        Vous pouvez modifier les informations relatives à cet engin ci-dessous. <br>
+        Toute modification est instantanément enregistrée dans la base de données.
+    </p>
+
     <section>
         <%
             Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);
             List<Compartiment> comparts = new CompartimentDAO().findAllByVehicule(vehicule);
-            for(Compartiment c : matos.keySet()){ 
+            // Tri des compartiments par l'id du compartiment
+            comparts.sort((c1, c2) -> c1.getID() - c2.getID());
+            for(Compartiment c : comparts){ 
                 out.println("<div id=\"" + c.getNom().replaceAll(" ", "") + "\">"); %>
-
                 <h2><%= c.getNom() %></h2>
-
-                <%
-                if(!matos.get(c).isEmpty()) { %>
+                <% System.out.println(c.getNom()); %>
+                <% if(matos.get(c) != null && !matos.get(c).isEmpty()) { %>
                     <table>
                         <tr>
                             <th>Matériel</th>
                             <th>Quantité</th>
                             <th>Supprimer ?</th>
                         </tr>
-    
                     <% for(Materiel materiel : matos.get(c)) { %>
                         <%= materiel.toHTMLModifLine() %>
                     <% } %>
                     </table>
-                <% }   %>
+                <% } %>
+
                     <form action="modifEngin" method="post">
                         <% out.println("<input type=\"hidden\" name=\"compartiment\" value=\"" + c.getID() + "\" required>"); %>
                         <label for="libelle">Libellé: </label>
@@ -54,11 +69,16 @@
                         <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
                         <input type="submit" value="Ajouter">
                     </form>
-                    
                 </div>           
             <% } %>
-
     </section>
+
+    <form action="modifEngin" method="post">
+        <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
+        <label for="compartiment">Ajout d'un compartiment: </label>
+        <input type="text" name="compartiment" id="compartiment" required>
+        <input type="submit" value="Ajouter">
+    </form>
 
     <script>
 
