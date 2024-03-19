@@ -68,11 +68,10 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
     public Compartiment save(Compartiment dto) {
         Compartiment compartiment = null;
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO compartiment(nom, type_engin) VALUES (?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO compartiment(nom, type_engin) VALUES (?, ?) RETURNING id");
             ps.setString(1, dto.getNom());
             ps.setString(2, dto.getTypeEngin());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
+            ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 compartiment = new Compartiment(rs.getInt(1), dto.getNom(), dto.getTypeEngin());
             }
