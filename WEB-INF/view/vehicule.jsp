@@ -22,7 +22,16 @@
     <%
         long start = System.currentTimeMillis();
     %>
+
     <h1><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></h1>
+
+    <p id="pres">
+        Vous êtes sur la page de vérification du véhicule <%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) du centre <%= vehicule.getCentre().getNom() %>.
+        Si un matériel est manquant ou en mauvais état, vous avez juste à cliquer sur la ligne correspondante pour le signaler. <br>
+        Le matériel sera alors enregistré comme étant manquant ou en mauvais état. <br>
+        A l'inverse, si il est de nouveau disponible ou en bon état, vous pouvez cliquer sur la ligne correspondante pour le réactiver. <br>
+        En cas de problème, contacter le chef de centre ou envoyé un mail en <a href="mailto:valentin.thuillier@luxferre-code.fr">cliquant ici</a>.
+    </p>
 
     <%
         Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);
