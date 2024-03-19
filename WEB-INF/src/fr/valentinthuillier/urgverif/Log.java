@@ -38,7 +38,7 @@ public class Log {
         File f = new File(LOG_DIR_FILE);
         if(!f.exists()) {
             try {
-                f.mkdirs();
+                new File(f.getParent()).mkdirs();
                 f.createNewFile();
             }
             catch(Exception e) {
