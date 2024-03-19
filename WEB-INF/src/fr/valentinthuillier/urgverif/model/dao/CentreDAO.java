@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Centre;
 
@@ -23,7 +24,7 @@ public class CentreDAO implements IDao<Centre, Integer> {
                 centre = new Centre(id, rs.getString("nom"), rs.getString("adresse"), rs.getString("chef_centre"), rs.getString("telephone"));
             }
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CentreDAO.findById: Erreur durant la récupération du centre: " + e.getMessage());
         }
         return centre;
     }
@@ -38,7 +39,7 @@ public class CentreDAO implements IDao<Centre, Integer> {
                 centres.add(new Centre(rs.getInt("id"), rs.getString("nom"), rs.getString("adresse"), rs.getString("chef_centre"), rs.getString("telephone")));
             }
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CentreDAO.findAll: Erreur durant la récupération des centres: " + e.getMessage());
         }
         return centres;
     }
@@ -55,7 +56,7 @@ public class CentreDAO implements IDao<Centre, Integer> {
             int id = ps.getGeneratedKeys().getInt(1);
             return new Centre(id, dto.getNom(), dto.getAdresse(), dto.getChefCentre(), dto.getTelephone());
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CentreDAO.save: Erreur lors de l'ajout du centre: " + e.getMessage());
         }
         return null;
     }
@@ -72,7 +73,7 @@ public class CentreDAO implements IDao<Centre, Integer> {
             ps.executeUpdate();
             return dto;
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CentreDAO.update: Erreur lors de la mise à jour du centre: " + e.getMessage());
         }
         return null;
     }
@@ -84,7 +85,7 @@ public class CentreDAO implements IDao<Centre, Integer> {
             ps.setInt(1, dto.getID());
             return ps.executeUpdate() > 0;
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CentreDAO.delete: Erreur lors de la suppression du centre: " + e.getMessage());
         }
         return false;
     }

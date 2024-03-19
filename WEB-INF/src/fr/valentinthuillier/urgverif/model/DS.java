@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
+import fr.valentinthuillier.urgverif.Log;
+
 public class DS {
 
     private static final String CONFIG_FILE_PATH = "/var/.config/UrgVerif/config.prop";
@@ -17,7 +19,7 @@ public class DS {
 
 
     public DS() throws Exception {
-        System.out.println("DS created");
+        Log.info("Loading database configuration");
         Properties p = new Properties();
 
         /* Check if config file exist */
@@ -42,10 +44,9 @@ public class DS {
             p.setProperty("login", "urgverif");
             p.setProperty("password", "TOSET");
             p.store(new FileOutputStream(file), "UrgVerif configuration file - Just set the password");
-            System.out.println("Config file created, please modify at " + file.getAbsolutePath() + " and restart the server.");
+            Log.info("Config file created, please modify at " + file.getAbsolutePath() + " and restart the server.");
         } catch(Exception e) {
-            System.out.println("Couldn't create config file !");
-            System.out.println(e.getMessage());
+            Log.error("Couldn't create config file, please check your permissions and restart the server.");
             System.exit(1);
         }
     }
@@ -56,7 +57,7 @@ public class DS {
                 instance = new DS();
             return DriverManager.getConnection(instance.url, instance.nom, instance.mdp);
         } catch(Exception e) {
-            System.out.println("Couldn't connect to database, please check your configuration file at " + new File(CONFIG_FILE_PATH).getAbsolutePath() + " and restart the server.");
+            Log.error("Couldn't connect to database, please check your configuration file at " + new File(CONFIG_FILE_PATH).getAbsolutePath() + " and restart the server.");
         }
         return null;
     }

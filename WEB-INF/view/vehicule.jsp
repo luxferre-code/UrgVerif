@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*" %>
+<%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*,fr.valentinthuillier.urgverif.controls.AlertBox" %>
+
+<%
+    AlertBox.checkError(request, response);
+%>
+
 <%
     Vehicule vehicule = (Vehicule) request.getAttribute("vehicule");
     if (vehicule == null) {
@@ -18,7 +23,6 @@
         long start = System.currentTimeMillis();
     %>
     <h1><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></h1>
-
 
     <%
         Map<Compartiment, List<Materiel>> matos = new MaterielDAO().findByVehicule(vehicule);

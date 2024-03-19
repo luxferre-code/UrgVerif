@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*" %>
+<%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*,fr.valentinthuillier.urgverif.controls.AlertBox" %>
+
+<%
+    // fr.valentinthuillier.urgverif.controls.AlertBox
+    AlertBox.checkError(request, response);
+%>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,13 +47,6 @@
             } 
         });
     </script>
-
-    <% 
-        String erreur = (String) request.getAttribute("erreur");
-        if(erreur != null && !erreur.isBlank()) {
-            out.println("<script>alert(\"" + erreur + "\")</script>");
-        }
-    %>
 
 </body>
 </html>

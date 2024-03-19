@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="fr.valentinthuillier.urgverif.controls.AlertBox" %>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
@@ -9,12 +10,8 @@
 <body>
 
     <%
-        String erreur = (String) request.getAttribute("erreur");
-        if(erreur != null) { %>
-            <script>
-                <% out.println("alert('" + erreur + "');"); %>
-            </script>
-        <% }
+    // fr.valentinthuillier.urgverif.controls.AlertBox
+        AlertBox.checkError(request, response);
     %>
     
     <header>

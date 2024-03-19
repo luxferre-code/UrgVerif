@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*" %>
+<%@ page import="fr.valentinthuillier.urgverif.model.Immatriculation,fr.valentinthuillier.urgverif.model.dto.*,fr.valentinthuillier.urgverif.model.dao.*,java.util.*,fr.valentinthuillier.urgverif.controls.AlertBox" %>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajout d'un engin - UrgVerif</title>
 </head>
 <body>
+
+    <%
+    // fr.valentinthuillier.urgverif.controls.AlertBox
+        AlertBox.checkError(request, response);
+    %>
     
     <section>
         <h1>Ajout d'un engin</h1>

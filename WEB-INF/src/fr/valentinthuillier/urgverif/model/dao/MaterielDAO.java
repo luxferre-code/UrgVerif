@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Compartiment;
 import fr.valentinthuillier.urgverif.model.dto.Materiel;
@@ -20,12 +21,14 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         try(Connection con = DS.getConnection()) {
 
             if(compartimentId == null || vehiculeId == null) {
-                throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: compartimentId or vehiculeId is null");
+                Log.warning("MaterielDAO.findByCompartimentAndVehicule: l'id du compartiment ou du véhicule est null");
+                throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: l'id du compartiment ou du véhicule est null");
             }
             Compartiment compartiment = new CompartimentDAO().findById(compartimentId);
             Vehicule vehicule = new VehiculeDAO().findById(vehiculeId);
             if(compartiment == null || vehicule == null) {
-                throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: compartiment or vehicule is null");
+                Log.warning("MaterielDAO.findByCompartimentAndVehicule: Le compartiment ou le véhicule est null");
+                throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: Le compartiment ou le véhicule est null");
             }
             PreparedStatement ps = con.prepareStatement("SELECT id, nom, quantite, valide FROM materiel WHERE id_compartiment = ? AND id_vehicule = ?");
             ps.setInt(1, compartiment.getID());
@@ -37,8 +40,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             }
 
         } catch(Exception e) {
-            System.out.println("MaterielDAO.findByCompartimentAndVehicule");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.findByCompartimentAndVehicule: Erreur lors de la récupération des matériels: " + e.getMessage());
         }
         return materiels;
     }
@@ -47,6 +49,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         Map<Compartiment, List<Materiel>> materiels = new HashMap<>();
         try(Connection con = DS.getConnection()) {
             if(vehicule == null) {
+                Log.warning("MaterielDAO.findByVehicule: Le véhicule est null");
                 throw new IllegalArgumentException("MaterielDAO.findByVehicule: vehicule is null");
             }
             PreparedStatement ps = con.prepareStatement("SELECT id, nom, quantite, id_compartiment, valide FROM materiel WHERE id_vehicule = ?");
@@ -77,8 +80,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             }
 
         } catch(Exception e) {
-            System.out.println("MaterielDAO.findByVehicule");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.findByVehicule: Erreur lors de la récupération des matériels: " + e.getMessage());
         }
 
         return materiels;
@@ -93,8 +95,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch(Exception e) {
-            System.out.println("MaterielDAO.checkIfIsAlreadyAssignedToVehicule");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.checkIfIsAlreadyAssignedToVehicule: Erreur lors de la vérification de l'affectation du matériel: " + e.getMessage());
         }
         return false;
     }
@@ -112,15 +113,14 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
                 materiel = new Materiel(id, rs.getString("nom"), rs.getInt("quantite"), compartiment, vehicule, rs.getBoolean("valide"));
             }
         } catch(Exception e) {
-            System.out.println("MaterielDAO.findById");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.findById: Erreur lors de la récupération du matériel: " + e.getMessage());
         }
         return materiel;
     }
 
     @Override
     public List<Materiel> findAll() {
-        // TODO Auto-generated method stub
+        Log.warning("Unimplemented method 'findAll' in MaterielDAO");
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
@@ -138,8 +138,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             return new Materiel(id, dto.getNom(), dto.getQuantite(), dto.getCompartiment(), dto.getVehicule(), dto.getValide());
 
         } catch(Exception e) {
-            System.out.println("MaterielDAO.save");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.save: Erreur lors de l'ajout du matériel: " + e.getMessage());
         }
         return null;
     }
@@ -157,8 +156,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             ps.executeUpdate();
             return dto;
         } catch(Exception e) {
-            System.out.println("MaterielDAO.update");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.update: Erreur lors de la mise à jour du matériel: " + e.getMessage());
         }
         return null;
     }
@@ -171,8 +169,7 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
             ps.executeUpdate();
             return true;
         } catch(Exception e) {
-            System.out.println("MaterielDAO.delete");
-            System.out.println(e.getMessage());
+            Log.error("MaterielDAO.delete: Erreur lors de la suppression du matériel: " + e.getMessage());
         }
         return false;
     }

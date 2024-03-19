@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 
@@ -25,8 +26,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             }
 
         } catch(Exception e) {
-            System.out.println("VehiculeDAO.findById");
-            System.out.println(e.getMessage());
+            Log.error("Erreur lors de la récupération du véhicule: " + e.getMessage());
         }
         return vehicule;
     }
@@ -42,15 +42,14 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             }
 
         } catch(Exception e) {
-            System.out.println("VehiculeDAO.findAllTypeEngin");
-            System.out.println(e.getMessage());
+            Log.error("Erreur lors de la récupération des types d'engin: " + e.getMessage());
         }
         return typeEngin;
     }
 
     @Override
     public List<Vehicule> findAll() {
-        // TODO Auto-generated method stub
+        Log.warning("Unimplemented method 'findAll' in VehiculeDAO");
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
@@ -64,21 +63,20 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             ps.executeUpdate();
             return new Vehicule(dto.getImmatriculation(), dto.getTypeEngin(), dto.getCentre());
         } catch(Exception e) {
-            System.out.println("VehiculeDAO.save");
-            System.out.println(e.getMessage());
+            Log.error("Erreur lors de l'ajout du véhicule: " + e.getMessage());
         }
         return null;
     }
 
     @Override
     public Vehicule update(Vehicule dto) {
-        // TODO Auto-generated method stub
+        Log.warning("Unimplemented method 'update' in VehiculeDAO");
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
     public boolean delete(Vehicule dto) {
-        // TODO Auto-generated method stub
+        Log.warning("Unimplemented method 'delete' in VehiculeDAO");
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
 
@@ -89,8 +87,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             ps.setString(2, v.getTypeEngin().toLowerCase());
             ps.executeUpdate();
         } catch(Exception e) {
-            System.out.println("VehiculeDAO.affect");
-            System.out.println(e.getMessage());
+            Log.error("Erreur lors de l'affectation du matériel: " + e.getMessage());
         }
     }
 

@@ -3,10 +3,10 @@ package fr.valentinthuillier.urgverif.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Compartiment;
 import fr.valentinthuillier.urgverif.model.dto.Vehicule;
@@ -25,8 +25,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             }
             ps.close();
         } catch(Exception e) {
-            System.out.println("CompartimentDAO.findById");
-            System.out.println(e.getMessage());
+            Log.error("CompartimentDAO.findById: Erreur durant la récupération du compartiment: " + e.getMessage());
         }
         return compartiment;
     }
@@ -42,8 +41,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             }
             ps.close();
         } catch(Exception e) {
-            System.out.println("CompartimentDAO.findAllByVehicule");
-            System.out.println(e.getMessage());
+            Log.error("CompartimentDAO.findAllByVehicule: Erreur durant la récupération des compartiments: " + e.getMessage());
         }
         return compartiments;
     }
@@ -59,7 +57,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             }
             ps.close();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CompartimentDAO.findAll: Erreur durant la récupération des compartiments: " + e.getMessage());
         }
         return compartiments;
     }
@@ -76,7 +74,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
                 compartiment = new Compartiment(rs.getInt(1), dto.getNom(), dto.getTypeEngin());
             }
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CompartimentDAO.save: Erreur durant l'ajout du compartiment: " + e.getMessage());
         }
         return compartiment;   
     }
@@ -89,7 +87,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             ps.setInt(2, dto.getID());
             ps.executeUpdate();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CompartimentDAO.update: Erreur durant la mise à jour du compartiment: " + e.getMessage());
         }
         return dto;   
     }
@@ -101,7 +99,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             ps.setInt(1, dto.getID());
             return ps.executeUpdate() > 0;
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            Log.error("CompartimentDAO.delete: Erreur durant la suppression du compartiment: " + e.getMessage());
         }
         return false;
     }

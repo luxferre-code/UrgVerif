@@ -19,13 +19,13 @@ public class EndVerif extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(true);
         if(session.getAttribute("matosIndspo") == null) {
-            req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
             return;
         }
         @SuppressWarnings("unchecked")
         List<Materiel> matosIndspo = (List<Materiel>) session.getAttribute("matosIndspo");
         if(matosIndspo == null || matosIndspo.size() == 0) {
-            req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
             return;
         }
         MaterielDAO dao = new MaterielDAO();
@@ -33,12 +33,12 @@ public class EndVerif extends HttpServlet {
             m.setValide(false);
             if(dao.update(m) == null) {
                 req.setAttribute("erreur", "Erreur lors de la mise à jour");
-                req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+                req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
                 return;
             }
         }
         session.removeAttribute("matosIndspo");
-        req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
     }
 
 }

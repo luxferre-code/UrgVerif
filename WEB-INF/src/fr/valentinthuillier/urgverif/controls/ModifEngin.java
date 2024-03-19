@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 
+import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.dao.CompartimentDAO;
 import fr.valentinthuillier.urgverif.model.dao.MaterielDAO;
 import fr.valentinthuillier.urgverif.model.dao.VehiculeDAO;
@@ -72,7 +73,6 @@ public class ModifEngin extends HttpServlet {
             quantite = Integer.parseInt(quantiteStr);
             compartimentId = Integer.parseInt(compartimentStr);
         } catch(Exception e) {
-            System.out.println("ModifEngin : parsing error");
             req.setAttribute("erreur", "Erreur de saisie");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
