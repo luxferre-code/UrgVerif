@@ -31,7 +31,8 @@
     <p>
         Bienvenur sur la page de modification du <%= vehicule.getTypeEngin() %> immatriculé <%= vehicule.getImmatriculation() %> !<br>
         Vous pouvez modifier les informations relatives à cet engin ci-dessous. <br>
-        Toute modification est instantanément enregistrée dans la base de données.
+        Toute modification est instantanément enregistrée dans la base de données. <br>
+        Si vous souhaité ajouté une vérification et non une quantité, indiqué 0 dans le champ quantité.
     </p>
 
     <section>
@@ -62,7 +63,7 @@
                         <label for="libelle">Libellé: </label>
                         <input type="text" name="libelle" id="libelle" required>
                         <label for="quantite">Quantité: </label>
-                        <input type="number" name="quantite" id="quantite" min="1" required>
+                        <input type="number" name="quantite" id="quantite" min="0" required>
                         <input type="hidden" name="immatriculation" value="<%= vehicule.getImmatriculation() %>">
                         <input type="submit" value="Ajouter">
                     </form>

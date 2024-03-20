@@ -34,12 +34,14 @@ public class ModifEngin extends HttpServlet {
             compartimentStr = cst.translate(compartimentStr);
             immatriculation = cst.translate(immatriculation);
             if(compartimentStr.isBlank() || immatriculation.isBlank()) {
+                Log.warning("ModifEngin: Ajout d'un compartiment : paramètres manquants");
                 req.setAttribute("erreur", "Veuillez remplir tous les champs");
                 req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
                 return;
             }
             Vehicule v = new VehiculeDAO().findById(immatriculation);
             if(v == null) {
+                Log.warning("ModifEngin: Ajout d'un compartiment : véhicule non trouvé");
                 req.setAttribute("erreur", "Véhicule non trouvé");
                 req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
                 return;
@@ -47,10 +49,12 @@ public class ModifEngin extends HttpServlet {
             Compartiment c = new Compartiment(compartimentStr, v.getTypeEngin());
             c = new CompartimentDAO().save(c);
             if(c != null) {
+                Log.info("ModifEngin: Ajout d'un compartiment : compartiment ajouté");
                 req.setAttribute("vehicule", v);
                 req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
                 return;
             } else {
+                Log.warning("ModifEngin: Ajout d'un compartiment : erreur lors de l'ajout du compartiment");
                 req.setAttribute("erreur", "Erreur lors de l'ajout du compartiment");
                 req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
                 return;
@@ -58,6 +62,7 @@ public class ModifEngin extends HttpServlet {
         }
 
         if(compartimentStr == null || compartimentStr.isBlank() || libelle == null || libelle.isBlank() || quantiteStr == null || quantiteStr.isBlank() || immatriculation == null || immatriculation.isBlank()) {
+            Log.warning("ModifEngin: Ajout d'un matériau : paramètres manquants");
             req.setAttribute("erreur", "Veuillez remplir tous les champs");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
@@ -73,6 +78,7 @@ public class ModifEngin extends HttpServlet {
             quantite = Integer.parseInt(quantiteStr);
             compartimentId = Integer.parseInt(compartimentStr);
         } catch(Exception e) {
+            Log.error("ModifEngin: Ajout d'un matériau : erreur lors de la conversion des paramètres");
             req.setAttribute("erreur", "Erreur de saisie");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
@@ -82,36 +88,42 @@ public class ModifEngin extends HttpServlet {
         Compartiment compartiment = new CompartimentDAO().findById(compartimentId);
 
         if(vehicule == null) {
+            Log.warning("ModifEngin: Ajout d'un matériau : véhicule non trouvé");
             req.setAttribute("erreur", "Véhicule non trouvé");
             req.getRequestDispatcher("/WEB-INF/view/modifEnginForm.jsp").forward(req, resp);
             return;
         }
 
         if(compartiment == null) {
+            Log.warning("ModifEngin: Ajout d'un matériau : compartiment non trouvé");
             req.setAttribute("erreur", "Compartiment non trouvé");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
         }
 
         if(quantite < 0) {
+            Log.warning("ModifEngin: Ajout d'un matériau : quantité invalide");
             req.setAttribute("erreur", "Quantité invalide");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
         }
 
         if(!vehicule.getTypeEngin().equals(compartiment.getTypeEngin())) {
+            Log.warning("ModifEngin: Ajout d'un matériau : compartiment ne correspond pas au type d'engin");
             req.setAttribute("erreur", "Le compartiment ne correspond pas au type d'engin");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
         }
 
         if(new MaterielDAO().checkIfIsAlreadyAssignedToVehicule(immatriculation, compartiment, libelle)) {
+            Log.warning("ModifEngin: Ajout d'un matériau : matériau déjà assigné");
             req.setAttribute("erreur", "Ce matériel est déjà assigné à ce compartiment");
             req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
             return;
         }
 
         new MaterielDAO().save(new Materiel(libelle, quantite, compartiment, vehicule, true));
+        Log.info("ModifEngin: Ajout d'un matériau : matériau ajouté");
         req.setAttribute("vehicule", vehicule);
         req.getRequestDispatcher("/WEB-INF/view/modifEngin.jsp").forward(req, resp);
     }

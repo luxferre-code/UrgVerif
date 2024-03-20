@@ -57,9 +57,9 @@
         // This script checks if the immatriculation is valid
         const immatInput = document.querySelector('form #immatriculation');
         const submitBtn = document.querySelector('form input[type="submit"]');
+        submitBtn.setAttribute('disabled', 'disabled');
         immatInput.addEventListener('input', () => {
             const value = immatInput.value.replaceAll(' ', '').replaceAll('-', '').toUpperCase();
-            // Example: fr-941-yq -> FR941YQ
             console.log(value);
             if (immatInput.value.length > 0) {
                 if (!/^[A-Z]{2}[0-9]{3}[A-Z]{2}$/.test(value)) {

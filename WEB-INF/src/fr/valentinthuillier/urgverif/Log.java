@@ -15,7 +15,7 @@ public class Log {
     private static final String ERROR_STRING = "ERROR";
     private static final String WARNING_STRING = "WARNING";
     private static final String LOG_FORMAT = "[%s] %s: %s";
-    private static final String LOG_DIR_FILE = "/opt/tomcat/webapps/urgverif/logs/urgverif-" + new SimpleDateFormat().format(new Date()) + ".log";
+    private static final String LOG_DIR_FILE = "/opt/tomcat/webapps/urgverif/logs/urgverif-" + new SimpleDateFormat().format(new Date()).split(" ")[0].replaceAll(" ", "_").replaceAll(":", "-").replaceAll("/", "-") + ".log";
 
     private static void log(String log) {
         if(logToConsole) System.out.println(log);
@@ -41,6 +41,7 @@ public class Log {
             try {
                 new File(f.getParent()).mkdirs();
                 f.createNewFile();
+                Runtime.getRuntime().exec("chmod 755 " + f.getAbsolutePath());
             }
             catch(Exception e) {
                 logToFile = false;
@@ -57,5 +58,5 @@ public class Log {
             error("Erreur lors de l'écriture dans le fichier de log");
         }
     }
-    
+
 }

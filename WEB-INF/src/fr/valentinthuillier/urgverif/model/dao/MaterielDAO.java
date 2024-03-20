@@ -58,7 +58,6 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
 
             Map<Integer, Compartiment> ids = new HashMap<>();
             for(Compartiment compartiment : new CompartimentDAO().findAllByVehicule(vehicule)) {
-                System.out.println(compartiment);
                 materiels.put(compartiment, new ArrayList<>());
                 ids.put(compartiment.getID(), compartiment);
             }
