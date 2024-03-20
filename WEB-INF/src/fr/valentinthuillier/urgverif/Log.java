@@ -2,6 +2,7 @@ package fr.valentinthuillier.urgverif;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Log {
@@ -14,7 +15,7 @@ public class Log {
     private static final String ERROR_STRING = "ERROR";
     private static final String WARNING_STRING = "WARNING";
     private static final String LOG_FORMAT = "[%s] %s: %s";
-    private static final String LOG_DIR_FILE = "/opt/tomcat/webapps/urgverif/logs/urgverif-" + new Date().getTime() + ".log";
+    private static final String LOG_DIR_FILE = "/opt/tomcat/webapps/urgverif/logs/urgverif-" + new SimpleDateFormat().format(new Date()) + ".log";
 
     private static void log(String log) {
         if(logToConsole) System.out.println(log);

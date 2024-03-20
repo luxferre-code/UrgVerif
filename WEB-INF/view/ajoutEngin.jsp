@@ -5,6 +5,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajout d'un engin - UrgVerif</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/ajout.css">
 </head>
 <body>
 
@@ -45,7 +47,9 @@
                     out.println("<option value=\"" + centre.getID() + "\">" + centre.getNom() + "</option>");
                 }
             %>
-        </select>
+        </select><br>
+        <label for="initialize">Valeur par défaut: </label>
+        <input type="checkbox" name="initialize" id="initialize" value="true"><br>
         <input type="submit" value="Ajouter">
     </form>
 

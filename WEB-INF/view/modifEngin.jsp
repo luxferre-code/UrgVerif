@@ -18,6 +18,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/modif.css">
     <title>Modification du <%= vehicule.getTypeEngin() %> (<%= vehicule.getImmatriculation() %>)</title>
 </head>

@@ -107,19 +107,21 @@ public class Materiel {
     }
 
     public String toHTMLLine(boolean onClickActive) {
+        String quant = this.quantite > 0 ? this.quantite + "" : "Fonctionnel";
         StringBuilder sb = new StringBuilder();
         String onClick = onClickActive ? "onclick=\"window.location.href='?idMateriel=" + this.ID + "';\" " : "";
         sb.append("<tr " + onClick + "class=\"" + (!this.valide ? "nonPresent" : "") + "\">");
         sb.append("<td>").append(nom).append("</td>");
-        sb.append("<td>").append(quantite).append("</td>");
+        sb.append("<td>").append(quant).append("</td>");
         return sb.toString();
     }
 
     public String toHTMLModifLine() {
+        String quant = this.quantite > 0 ? this.quantite + "" : "Fonctionnel";
         StringBuilder sb = new StringBuilder();
         sb.append("<tr>");
         sb.append("<td>").append(nom).append("</td>");
-        sb.append("<td>").append(quantite).append("</td>");
+        sb.append("<td>").append(quant).append("</td>");
         sb.append("<td><button class=\"delete\" type=\"submit\" name=\"idMateriel\" value=\"").append(this.ID).append("\">Oui</button></td>");
         sb.append("</tr>");
         return sb.toString();

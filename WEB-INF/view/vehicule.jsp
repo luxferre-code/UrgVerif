@@ -15,6 +15,7 @@
 %>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/verif.css">
     <title><%= vehicule.getTypeEngin() %> (<%= Immatriculation.translateToOriginal(vehicule.getImmatriculation()) %>) | <%= vehicule.getCentre().getNom() %></title>
 </head>

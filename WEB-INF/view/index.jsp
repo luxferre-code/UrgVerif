@@ -4,6 +4,7 @@
 <%@ page import="fr.valentinthuillier.urgverif.controls.AlertBox" %>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/index.css">
     <title>UrgVerif - Accueil</title>
 </head>

@@ -10,6 +10,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/root.css">
     <title>Modification d'un engin</title>
 </head>
 <body>
