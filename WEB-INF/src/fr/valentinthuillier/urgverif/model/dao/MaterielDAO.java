@@ -160,6 +160,25 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return null;
     }
 
+    public boolean updateAll(List<Materiel> updates) {
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("UPDATE materiel SET nom = ?, quantite = ?, id_compartiment = ?, id_vehicule = ?, valide = ? WHERE id = ?");
+            for(Materiel dto : updates) {
+                ps.setString(1, dto.getNom());
+                ps.setInt(2, dto.getQuantite());
+                ps.setInt(3, dto.getCompartiment().getID());
+                ps.setString(4, dto.getVehicule().getImmatriculation());
+                ps.setBoolean(5, dto.getValide());
+                ps.setInt(6, dto.getID());
+                ps.addBatch();
+            }
+            return ps.executeBatch().length == updates.size();
+        } catch(Exception e) {
+            Log.error("MaterielDAO.updateAll: Erreur lors de la mise à jour des matériels: " + e.getMessage());
+        }
+        return false;
+    }
+
     @Override
     public boolean delete(Materiel dto) {
         try(Connection con = DS.getConnection()) {

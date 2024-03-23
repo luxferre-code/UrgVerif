@@ -47,7 +47,7 @@
                 </tr>
 
             <% for(Materiel materiel : matos.get(compartiment)) { %>
-                <%= materiel.toHTMLLine(true) %>
+                <%= materiel.toHTMLLine() %>
             <% } %>
             </table>
         <% } %>
@@ -56,6 +56,7 @@
         <label for="matricule">Votre matricule: </label>
         <input type="text" name="matricule" id="matricule">
         <% out.println("<input type=\"hidden\" name=\"immatriculation\" value=\"" + vehicule.getImmatriculation() + "\">"); %>
+        <input type="hidden" name="matos" value="">
         <input type="submit" value="Valider">
     </form>
 
@@ -63,6 +64,8 @@
         long end = System.currentTimeMillis();
         out.println("<p>Page générée en " + (end - start) + "ms</p>");
     %>
+
+    <script src="js/verif.js" defer></script>
 
 </body>
 </html>

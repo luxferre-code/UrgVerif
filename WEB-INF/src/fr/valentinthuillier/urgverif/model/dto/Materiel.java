@@ -106,11 +106,10 @@ public class Materiel {
                 + ", vehicule=" + vehicule + ", valide=" + this.valide + "]";
     }
 
-    public String toHTMLLine(boolean onClickActive) {
+    public String toHTMLLine() {
         String quant = this.quantite > 0 ? this.quantite + "" : "Fonctionnel";
         StringBuilder sb = new StringBuilder();
-        String onClick = onClickActive ? "onclick=\"window.location.href='?idMateriel=" + this.ID + "';\" " : "";
-        sb.append("<tr " + onClick + "class=\"" + (!this.valide ? "nonPresent" : "") + "\">");
+        sb.append("<tr id=\"" + this.ID + "\" class=\"" + (!this.valide ? "nonPresent verif" : "verif") + "\">");
         sb.append("<td>").append(nom).append("</td>");
         sb.append("<td>").append(quant).append("</td>");
         return sb.toString();
