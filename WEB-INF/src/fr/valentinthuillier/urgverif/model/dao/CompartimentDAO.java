@@ -11,8 +11,22 @@ import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Compartiment;
 import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 
+/**
+ * CompartimentDAOClass -   Cette classe permet de manipuler les compartiments au sein de la base de données.
+ * @author Valentin THUILLIER <valentin.thuillier@luxferre-code.fr>
+ * @version 1.0
+ * @see fr.valentinthuillier.urgverif.Log
+ * @see fr.valentinthuillier.urgverif.model.DS
+ * @see fr.valentinthuillier.urgverif.model.dto.Compartiment
+ * @see fr.valentinthuillier.urgverif.model.dto.Vehicule
+ */
 public class CompartimentDAO implements IDao<Compartiment, Integer> {
 
+    /**
+     * Cette méthode permet de chercher par son identifiant un compartiment.
+     * @param   id  (Integer)   -   Son identifiant
+     * @return  (Compartiment)  -   L'objet représentant le compartiment ou null si l'identifiant n'est pas enregistré.
+     */
     @Override
     public Compartiment findById(Integer id) {
         Compartiment compartiment = null;
@@ -30,6 +44,11 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
         return compartiment;
     }
 
+    /**
+     * Cette méthode permet de chercher par son type d'engin tous les compartiments.
+     * @param   vehicule    (Vehicule)  -   Le type d'engin
+     * @return  (List<Compartiment>)  -   La liste des compartiments ou une liste vide si aucun compartiment n'est enregistré.
+     */
     public List<Compartiment> findAllByVehicule(Vehicule vehicule) {
         List<Compartiment> compartiments = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
@@ -46,6 +65,10 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
         return compartiments;
     }
 
+    /**
+     * Cette méthode permet d'obtenir tous les compartiments présent dans la base de données.
+     * @return  (List<Compartiment>)  -   La liste des compartiments ou une liste vide si aucun compartiment n'est enregistré.
+     */
     @Override
     public List<Compartiment> findAll() {
         List<Compartiment> compartiments = new ArrayList<>();
@@ -62,6 +85,11 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
         return compartiments;
     }
 
+    /**
+     * Cette méthode permet d'enregistrer un compartiment dans la base de données.
+     * @param   dto (Compartiment)  -   L'objet représentant le compartiment à enregistrer
+     * @return  (Compartiment)  -   L'objet représentant le compartiment enregistré ou null si une erreur est survenue.
+     */
     @Override
     public Compartiment save(Compartiment dto) {
         Compartiment compartiment = null;
@@ -79,6 +107,11 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
         return compartiment;   
     }
 
+    /**
+     * Cette méthode permet de mettre à jour un compartiment dans la base de données.
+     * @param   dto (Compartiment)  -   L'objet représentant le compartiment à mettre à jour
+     * @return  (Compartiment)  -   L'objet représentant le compartiment mis à jour ou null si une erreur est survenue.
+     */
     @Override
     public Compartiment update(Compartiment dto) {
         try(Connection con = DS.getConnection()) {
@@ -88,10 +121,16 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
             ps.executeUpdate();
         } catch(Exception e) {
             Log.error("CompartimentDAO.update: Erreur durant la mise à jour du compartiment: " + e.getMessage());
+            return null;
         }
         return dto;   
     }
 
+    /**
+     * Cette méthode permet de supprimer un compartiment de la base de données.
+     * @param   dto (Compartiment)  -   L'objet représentant le compartiment à supprimer
+     * @return  (boolean)   -   true si le compartiment a été supprimé, false sinon.
+     */
     @Override
     public boolean delete(Compartiment dto) {
         try(Connection con = DS.getConnection()) {

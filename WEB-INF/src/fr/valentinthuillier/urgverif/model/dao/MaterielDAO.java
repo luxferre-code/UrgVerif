@@ -14,18 +14,34 @@ import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * MaterielDAOClass -   Cette classe permet de manipuler le matériel au sein de la base de données.
+ * @author Valentin THUILLIER <valentin.thuillier@luxferre-code.fr>
+ * @version 1.0
+ * @see fr.valentinthuillier.urgverif.Log
+ * @see fr.valentinthuillier.urgverif.model.DS
+ * @see fr.valentinthuillier.urgverif.model.dto.Materiel
+ * @see fr.valentinthuillier.urgverif.model.dto.Compartiment
+ * @see fr.valentinthuillier.urgverif.model.dto.Vehicule
+ */
 public class MaterielDAO implements IDao<Materiel, Integer> {
 
-    public List<Materiel> findByCompartimentAndVehicule(Integer compartimentId, String vehiculeId) {
+    /**
+     * Cette méthode permet de charger une liste de matériels en fonction de l'id du compartiment et de l'immatriculation du véhicule.
+     * @param   compartimentId  (Integer)   -   L'id du compartiment
+     * @param   immatriculation  (String)   -   L'immatriculation du véhicule
+     * @return  (List<Materiel>)  -   La liste des matériels
+     */
+    public List<Materiel> findByCompartimentAndVehicule(Integer compartimentId, String immatriculation) {
         List<Materiel> materiels = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
 
-            if(compartimentId == null || vehiculeId == null) {
+            if(compartimentId == null || immatriculation == null) {
                 Log.warning("MaterielDAO.findByCompartimentAndVehicule: l'id du compartiment ou du véhicule est null");
                 throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: l'id du compartiment ou du véhicule est null");
             }
             Compartiment compartiment = new CompartimentDAO().findById(compartimentId);
-            Vehicule vehicule = new VehiculeDAO().findById(vehiculeId);
+            Vehicule vehicule = new VehiculeDAO().findById(immatriculation);
             if(compartiment == null || vehicule == null) {
                 Log.warning("MaterielDAO.findByCompartimentAndVehicule: Le compartiment ou le véhicule est null");
                 throw new IllegalArgumentException("MaterielDAO.findByCompartimentAndVehicule: Le compartiment ou le véhicule est null");
@@ -45,6 +61,11 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return materiels;
     }
 
+    /**
+     * Cette méthode permet de charger une map de matériels en fonction de l'immatriculation du véhicule, dont la clé est le compartiment dans lequel il appartient.
+     * @param   vehicule  (Vehicule)   -   Le véhicule
+     * @return  (Map<Compartiment, List<Materiel>>)  -   La map des matériels
+     */
     public Map<Compartiment, List<Materiel>> findByVehicule(Vehicule vehicule) {
         Map<Compartiment, List<Materiel>> materiels = new HashMap<>();
         try(Connection con = DS.getConnection()) {
@@ -69,9 +90,9 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
 
             // Enleve les compartiments sans materiels
             List<Compartiment> toRm = new ArrayList<>();
-            for(Compartiment compartiment : materiels.keySet()) {
-                if(materiels.get(compartiment).isEmpty()) {
-                    toRm.add(compartiment);
+            for(Map.Entry<Compartiment, List<Materiel>> entry : materiels.entrySet()) {
+                if(entry.getValue().isEmpty()) {
+                    toRm.add(entry.getKey());
                 }
             }
             for(Compartiment compartiment : toRm) {
@@ -85,6 +106,13 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return materiels;
     }
 
+    /**
+     * Cette méthode permet de vérifier si le matériel est déjà affecté à un véhicule.
+     * @param immatriculation   (String)    -   L'immatriculation du véhicule
+     * @param compartiment  (Compartiment)  -   Le compartiment
+     * @param nomMateriel   (String)    -   Le nom du matériel
+     * @return  (boolean)   -   Vrai si le matériel est déjà affecté, faux sinon
+     */
     public boolean checkIfIsAlreadyAssignedToVehicule(String immatriculation, Compartiment compartiment, String nomMateriel) {
         try(Connection con = DS.getConnection()) {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM materiel WHERE id_vehicule = ? AND id_compartiment = ? AND nom = ?");
@@ -99,6 +127,11 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return false;
     }
 
+    /**
+     * Cette méthode permet de charger un matériel en fonction de son id.
+     * @param   id  (Integer)   -   L'id du matériel
+     * @return  (Materiel)  -   Le matériel, ou null si non trouvé
+     */
     @Override
     public Materiel findById(Integer id) {
         Materiel materiel = null;
@@ -123,6 +156,11 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
+    /**
+     * Cette méthode permet d'enregistrer un matériel dans la base de données.
+     * @param   dto (Materiel)  -   L'objet représentant le matériel à enregistrer
+     * @return  (Materiel)  -   Le matériel enregistré, ou null en cas d'erreur
+     */
     @Override
     public Materiel save(Materiel dto) {
         try(Connection con = DS.getConnection()) {
@@ -142,6 +180,11 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return null;
     }
 
+    /**
+     * Cette méthode permet de mettre à jour un matériel dans la base de données (utilisons l'id indiqué dans l'objet).
+     * @param   dto (Materiel)  -   L'objet représentant le matériel à mettre à jour
+     * @return  (Materiel)  -   Le matériel mis à jour, ou null en cas d'erreur
+     */
     @Override
     public Materiel update(Materiel dto) {
         try(Connection con = DS.getConnection()) {
@@ -160,6 +203,11 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return null;
     }
 
+    /**
+     * Cette méthode permet de mettre à jour une liste de matériels dans la base de données.
+     * @param   updates (List<Materiel>)  -   La liste des matériels à mettre à jour
+     * @return  (boolean)   -   Vrai si la mise à jour a réussi, faux sinon
+     */
     public boolean updateAll(List<Materiel> updates) {
         try(Connection con = DS.getConnection()) {
             PreparedStatement ps = con.prepareStatement("UPDATE materiel SET nom = ?, quantite = ?, id_compartiment = ?, id_vehicule = ?, valide = ? WHERE id = ?");
@@ -179,6 +227,11 @@ public class MaterielDAO implements IDao<Materiel, Integer> {
         return false;
     }
 
+    /**
+     * Cette méthode permet de supprimer un matériel de la base de données.
+     * @param   dto (Materiel)  -   L'objet représentant le matériel à supprimer
+     * @return  (boolean)   -   Vrai si la suppression a réussi, faux sinon
+     */
     @Override
     public boolean delete(Materiel dto) {
         try(Connection con = DS.getConnection()) {

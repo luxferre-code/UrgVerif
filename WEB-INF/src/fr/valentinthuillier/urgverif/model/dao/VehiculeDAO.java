@@ -10,8 +10,20 @@ import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Vehicule;
 
+/**
+ * VehiculeDAOClass -   Cette classe permet de manipuler les véhicules au sein de la base de données.
+ * @author Valentin THUILLIER <valentin.thuillier@luxferre-code.fr>
+ * @see fr.valentinthuillier.urgverif.model.dto.Vehicule
+ * @see fr.valentinthuillier.urgverif.model.DS
+ * @see fr.valentinthuillier.urgverif.Log
+ */
 public class VehiculeDAO implements IDao<Vehicule, String> {
 
+    /**
+     * Cette méthode permet de chercher par sa plaque d'immatriculation un véhicule.
+     * @param   id  (String)   -   Sa plaque d'immatriculation
+     * @return  (Vehicule)  -   L'objet représentant le véhicule ou null si la plaque n'est pas enregistré.
+     */
     @Override
     public Vehicule findById(String id) {
         Vehicule vehicule = null;
@@ -24,6 +36,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
                 CentreDAO centreDAO = new CentreDAO();
                 vehicule = new Vehicule(rs.getString("immatriculation"), rs.getString("type_engin"), centreDAO.findById(rs.getInt("id_centre")));
             }
+            ps.close();
 
         } catch(Exception e) {
             Log.error("Erreur lors de la récupération du véhicule: " + e.getMessage());
@@ -31,6 +44,10 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         return vehicule;
     }
 
+    /**
+     * Cette méthode permet d'obtenir tous les types d'engins présent dans la base de données.
+     * @return  (List<String>)  -   La liste des types d'engins.
+     */
     public List<String> findAllTypeEngin() {
         List<String> typeEngin = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
@@ -40,6 +57,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             while(rs.next()) {
                 typeEngin.add(rs.getString("nom"));
             }
+            ps.close();
 
         } catch(Exception e) {
             Log.error("Erreur lors de la récupération des types d'engin: " + e.getMessage());
@@ -53,6 +71,11 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
+    /**
+     * Cette méthode permet d'enregistrer un véhicule dans la base de données.
+     * @param   dto (Vehicule)  -   L'objet représentant le véhicule à enregistrer
+     * @return  (Vehicule)  -   L'objet représentant le véhicule enregistré
+     */
     @Override
     public Vehicule save(Vehicule dto) {
         try(Connection con = DS.getConnection()) {
@@ -61,6 +84,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             ps.setString(2, dto.getTypeEngin());
             ps.setInt(3, dto.getCentre().getID());
             ps.executeUpdate();
+            ps.close();
             return new Vehicule(dto.getImmatriculation(), dto.getTypeEngin(), dto.getCentre());
         } catch(Exception e) {
             Log.error("Erreur lors de l'ajout du véhicule: " + e.getMessage());
@@ -80,12 +104,17 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
 
+    /**
+     * Cette méthode permet d'affecter le matériel par défaut dans le véhciule.
+     * @param v (Vehicule)  -   Le véhicule à qui affecter le matériel
+     */
     public void affect(Vehicule v) {
         try(Connection con = DS.getConnection()) {
             PreparedStatement ps = con.prepareStatement("INSERT INTO materiel(id_compartiment, id_vehicule, nom, quantite) SELECT id_compartiment, ?, nom, quantite FROM materiel WHERE id_vehicule = ?");
             ps.setString(1, v.getImmatriculation());
             ps.setString(2, v.getTypeEngin().toLowerCase());
             ps.executeUpdate();
+            ps.close();
         } catch(Exception e) {
             Log.error("Erreur lors de l'affectation du matériel: " + e.getMessage());
         }

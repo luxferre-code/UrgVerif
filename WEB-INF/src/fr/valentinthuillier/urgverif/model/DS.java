@@ -9,16 +9,28 @@ import java.util.Properties;
 
 import fr.valentinthuillier.urgverif.Log;
 
+/**
+ * DSClass  -   Cette classe permet de gérer la connexion à la base de données
+ * @author Valentin THUILLIER <valentin.thuillier@luxferre-code.fr>
+ * @version 1.0
+ * @see fr.valentinthuillier.urgverif.Log
+ * @see java.sql.Connection
+*/
 public class DS {
 
+    /**
+     * Emplacement du fichier de configuration pour la connexion à la base de données
+     */
     private static final String CONFIG_FILE_PATH = "/var/.config/UrgVerif/config.prop";
     private static DS instance = null;
     private final String nom;
     private final String mdp;
     private final String url;
 
-
-    public DS() throws Exception {
+    /**
+     * Constructeur de la classe DS (private vu que singleton)
+     */
+    private DS() throws Exception {
         Log.info("Loading database configuration");
         Properties p = new Properties();
 
@@ -34,6 +46,11 @@ public class DS {
         this.mdp = p.getProperty("password");
     }
 
+    /**
+     * Cette méthode permet d'initialiser le fichier de configuration
+     * @param file  (File)  -   Fichier de configuration
+     * @see java.io.File
+     */
     private void initConfigFile(File file) {
         try {
             try { file.getParentFile().mkdirs(); } catch(Exception e) {}
@@ -51,6 +68,12 @@ public class DS {
         }
     }
 
+    /**
+     * Cette méthode permet de récupérer une connexion à la base de données
+     * @return  Connection  -   Connexion à la base de données
+     * @see java.sql.Connection
+     * @see java.sql.DriverManager
+     */
     public static Connection getConnection() {
         try {
             if(instance == null)

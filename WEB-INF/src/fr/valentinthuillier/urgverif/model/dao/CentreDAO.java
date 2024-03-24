@@ -11,8 +11,21 @@ import fr.valentinthuillier.urgverif.Log;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Centre;
 
+/**
+ * CentreDAOClass -   Cette classe permet de manipuler les centres au sein de la base de données.
+ * @author Valentin THUILLIER <valentin.thuillier@luxferre-code.fr>
+ * @version 1.0
+ * @see fr.valentinthuillier.urgverif.model.dto.Centre
+ * @see fr.valentinthuillier.urgverif.model.DS
+ * @see fr.valentinthuillier.urgverif.Log
+*/
 public class CentreDAO implements IDao<Centre, Integer> {
 
+    /**
+     * Cette méthode permet de chercher par son identifiant un centre.
+     * @param   id  (Integer)   -   Son identifiant
+     * @return  (Centre)  -   L'objet représentant le centre ou null si l'identifiant n'est pas enregistré.
+     */
     @Override
     public Centre findById(Integer id) {
         Centre centre = null;
@@ -29,6 +42,10 @@ public class CentreDAO implements IDao<Centre, Integer> {
         return centre;
     }
 
+    /**
+     * Cette méthode permet d'obtenir tous les centres présent dans la base de données.
+     * @return  (List<Centre>)  -   La liste des centres.
+     */
     @Override
     public List<Centre> findAll() {
         List<Centre> centres = new ArrayList<>();
@@ -44,6 +61,11 @@ public class CentreDAO implements IDao<Centre, Integer> {
         return centres;
     }
 
+    /**
+     * Cette méthode permet d'ajouter un centre dans la base de données.
+     * @param   dto (Centre)    -   L'objet représentant le centre à ajouter.
+     * @return  (Centre)    -   L'objet représentant le centre ajouté ou null si une erreur est survenue.
+     */
     @Override
     public Centre save(Centre dto) {
         try(Connection con = DS.getConnection()) {
@@ -61,6 +83,11 @@ public class CentreDAO implements IDao<Centre, Integer> {
         return null;
     }
 
+    /**
+     * Cette méthode permet de mettre à jour un centre dans la base de données.
+     * @param   dto (Centre)    -   L'objet représentant le centre à mettre à jour.
+     * @return  (Centre)    -   L'objet représentant le centre mis à jour ou null si une erreur est survenue.
+     */
     @Override
     public Centre update(Centre dto) {
         try(Connection con = DS.getConnection()) {
@@ -78,6 +105,11 @@ public class CentreDAO implements IDao<Centre, Integer> {
         return null;
     }
 
+    /**
+     * Cette méthode permet de supprimer un centre de la base de données.
+     * @param   dto (Centre)    -   L'objet représentant le centre à supprimer.
+     * @return  (boolean)   -   true si la suppression a été effectuée, false sinon.
+     */
     @Override
     public boolean delete(Centre dto) {
         try(Connection con = DS.getConnection()) {
