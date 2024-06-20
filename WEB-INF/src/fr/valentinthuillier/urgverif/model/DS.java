@@ -22,6 +22,7 @@ public class DS {
      * Emplacement du fichier de configuration pour la connexion à la base de données
      */
     private static final String CONFIG_FILE_PATH = "/var/.config/UrgVerif/config.prop";
+    private static final String VERSION = "1.0";
     private static DS instance = null;
     private final String nom;
     private final String mdp;
@@ -44,6 +45,21 @@ public class DS {
         this.url = p.getProperty("url");
         this.nom = p.getProperty("login");
         this.mdp = p.getProperty("password");
+        if(VERSION.compareTo(p.getProperty("version")) != 0) {
+            Log.error("Version mismatch, please update your configuration file at " + file.getAbsolutePath() + " and restart the server.");
+            try { file.delete(); } catch(Exception e) {}
+            initConfigFile(file);
+        }
+    }
+
+    public static boolean isConfigured() {
+        try {
+            if(instance == null)
+                instance = new DS();
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -60,12 +76,24 @@ public class DS {
             p.setProperty("url", "jdbc:postgresql://valentin-thuillier.fr:5432/urgverif");
             p.setProperty("login", "urgverif");
             p.setProperty("password", "TOSET");
+            p.setProperty("version", VERSION);
             p.store(new FileOutputStream(file), "UrgVerif configuration file - Just set the password");
             Log.info("Config file created, please modify at " + file.getAbsolutePath() + " and restart the server.");
         } catch(Exception e) {
             Log.error("Couldn't create config file, please check your permissions and restart the server.");
             System.exit(1);
         }
+    }
+
+    public static void configure(String driver, String url, String login, String password) throws Exception {
+        Properties p = new Properties();
+        p.setProperty("driver", driver);
+        p.setProperty("url", url);
+        p.setProperty("login", login);
+        p.setProperty("password", password);
+        p.setProperty("version", VERSION);
+        p.store(new FileOutputStream(CONFIG_FILE_PATH), "UrgVerif configuration file");
+        Log.info("Configuration file updated, please restart the server.");
     }
 
     /**

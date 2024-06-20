@@ -2,6 +2,6 @@
     "java.project.outputPath": "WEB-INF/classes",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "/opt/tomcat/lib/*.jar"
+        "/home/valentin/Documents/tomcat/lib/*.jar"
     ]
 }
