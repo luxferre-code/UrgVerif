@@ -1,5 +1,3 @@
-DELETE FROM vehicule WHERE immatriculation = 'vsav' OR immatriculation = 'FR941YQ';
-
 INSERT INTO vehicule(immatriculation, type_engin, id_centre)
 VALUES ('vsav', 'VSAV', 1),
 ('FR941YQ', 'VSAV', 1);
@@ -127,5 +125,3 @@ INSERT INTO materiel(id_compartiment, id_vehicule, nom, quantite)
 SELECT id_compartiment, 'FR941YQ', nom, quantite
 FROM materiel
 WHERE id_vehicule = 'vsav';
-
-\! echo "Default values for VSAV installed successfully!"

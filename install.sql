@@ -4,19 +4,59 @@ DROP TABLE IF EXISTS vehicule CASCADE;
 DROP TABLE IF EXISTS compartiment CASCADE;
 DROP TABLE IF EXISTS materiel CASCADE;
 DROP TABLE IF EXISTS verif_history CASCADE;
+DROP TABLE IF EXISTS gallon CASCADE;
+DROP TABLE IF EXISTS user CASCADE;
 
 CREATE TABLE centre
 (
     id SERIAL,
     nom TEXT,
     adresse TEXT,
-    chef_centre TEXT,
     telephone TEXT,
     CONSTRAINT pkey_centre PRIMARY KEY (id)
 );
 
-INSERT INTO centre(nom, adresse, chef_centre, telephone)
-VALUES ('CIS Oignies', '105 Rue des 80 Fusillés, 62590 Oignies', 'Lieutenant Fengler', '321692618');
+INSERT INTO centre(nom, adresse, telephone)
+VALUES ('CIS Oignies', '105 Rue des 80 Fusillés, 62590 Oignies', 'Lieutenant Fengler', '0321692618');
+
+CREATE TABLE gallon
+(
+    id SERIAL,
+    gallon TEXT,
+    CONSTRAINT pkey_gallon PRIMARY KEY (id)
+);
+
+INSERT INTO gallon(gallon)
+VALUES (
+    ("Sapeur 2ème classe"),
+    ("Sapeur 1ère classe"),
+    ("Caporal"),
+    ("Caporal-chef"),
+    ("Sergent"),
+    ("Sergent-chef"),
+    ("Adjudant"),
+    ("Adjudant-chef"),
+    ("Lieutenant"),
+    ("Capitaine"),
+    ("Commandant"),
+    ("Lieutenant-colonel"),
+    ("Colonel"),
+    ("Administrateur du site")
+);
+
+CREATE TABLE user
+(
+    matricule TEXT UNIQUE,
+    nom TEXT NOT NULL,
+    prenom TEXT NOT NULL,
+    password TEXT NOT NULL,
+    mail TEXT NOT NULL CHECK (mail ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') UNIQUE,
+    id_centre INT,
+    gallon INT DEFAULT 0,
+    CONSTRAINT pkey_user PRIMARY KEY (matricule),
+    CONSTRAINT fkey_user_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_user_gallon FOREIGN KEY (gallon) REFERENCES gallon(id) ON DELETE CASCADE
+);
 
 CREATE TABLE type_engin
 (
@@ -104,6 +144,3 @@ WHERE (immatriculation, date_verif, time_verif) IN
     FROM verif_history
     GROUP BY immatriculation
 );
-
-\! echo "Database created successfully!"
-\! echo "You can install default values to a VSAV with install_vsav.sql" 
