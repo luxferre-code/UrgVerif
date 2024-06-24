@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS compartiment CASCADE;
 DROP TABLE IF EXISTS materiel CASCADE;
 DROP TABLE IF EXISTS verif_history CASCADE;
 DROP TABLE IF EXISTS gallon CASCADE;
-DROP TABLE IF EXISTS user CASCADE;
+DROP TABLE IF EXISTS agent CASCADE;
+DROP TABLE IF EXISTS chef_centre CASCADE;
 
 CREATE TABLE centre
 (
@@ -17,7 +18,7 @@ CREATE TABLE centre
 );
 
 INSERT INTO centre(nom, adresse, telephone)
-VALUES ('CIS Oignies', '105 Rue des 80 Fusillés, 62590 Oignies', 'Lieutenant Fengler', '0321692618');
+VALUES ('CIS Oignies', '105 Rue des 80 Fusillés, 62590 Oignies', '0321692618');
 
 CREATE TABLE gallon
 (
@@ -44,7 +45,7 @@ VALUES (
     ("Administrateur du site")
 );
 
-CREATE TABLE user
+CREATE TABLE agent
 (
     matricule TEXT UNIQUE,
     nom TEXT NOT NULL,
@@ -53,9 +54,18 @@ CREATE TABLE user
     mail TEXT NOT NULL CHECK (mail ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') UNIQUE,
     id_centre INT,
     gallon INT DEFAULT 0,
-    CONSTRAINT pkey_user PRIMARY KEY (matricule),
-    CONSTRAINT fkey_user_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_user_gallon FOREIGN KEY (gallon) REFERENCES gallon(id) ON DELETE CASCADE
+    CONSTRAINT pkey_agent PRIMARY KEY (matricule),
+    CONSTRAINT fkey_agent_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_agent_gallon FOREIGN KEY (gallon) REFERENCES gallon(id) ON DELETE CASCADE
+);
+
+CREATE TABLE chef_centre
+(
+    id_centre INT,
+    matricule TEXT,
+    CONSTRAINT pkey_chef_centre PRIMARY KEY (id_centre),
+    CONSTRAINT fkey_chef_centre_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_chef_centre_agent FOREIGN KEY (matricule) REFERENCES agent(matricule) ON DELETE CASCADE
 );
 
 CREATE TABLE type_engin

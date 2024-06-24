@@ -1,0 +1,81 @@
+@startuml "Modèle Conceptuel de Données d'UrgVerif"
+
+entity centre {
+    * id: SERIAL
+    --
+    nom: TEXT
+    adresse: TEXT
+    telephone: TEXT
+}
+
+entity gallon {
+    * id: SERIAL
+    --
+    gallon: TEXT
+}
+
+entity agent {
+    * matricule: TEXT
+    --
+    nom: TEXT
+    prenom: TEXT
+    password: TEXT
+    mail: TEXT
+    id_centre: INT
+    gallon: INT
+}
+
+entity chef_centre {
+    * id_centre: INT
+    --
+    matricule: TEXT
+}
+
+entity type_engin {
+    * nom: TEXT
+}
+
+entity vehicule {
+    * immatriculation: VARCHAR(7)
+    --
+    type_engin: TEXT
+    id_centre: INT
+}
+
+entity compartiment {
+    * id: SERIAL
+    --
+    nom: TEXT
+    type_engin: TEXT
+}
+
+entity materiel {
+    * id: SERIAL
+    --
+    id_compartiment: INT
+    id_vehicule: VARCHAR(7)
+    nom: TEXT
+    quantite: INT
+    valide: BOOLEAN
+}
+
+entity verif_history {
+    * id: SERIAL
+    --
+    immatriculation: TEXT
+    date_verif: DATE
+    time_verif: TIME
+    matricule: TEXT
+}
+
+centre ||--o{ agent : "1"
+centre ||--o{ vehicule : "1"
+centre ||--|| chef_centre : "1"
+gallon ||--o{ agent : "1"
+agent ||--o{ verif_history : "1"
+type_engin ||--o{ vehicule : "1"
+type_engin ||--o{ compartiment : "1"
+vehicule ||--o{ materiel : "1"
+compartiment ||--o{ materiel : "1"
+
+@enduml
