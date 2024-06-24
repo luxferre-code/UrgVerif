@@ -1,7 +1,8 @@
 {
     "java.project.outputPath": "WEB-INF/classes",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar",
+        "libs/**/*.jar",
         "/home/valentin/Documents/tomcat/lib/*.jar"
-    ]
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
 }

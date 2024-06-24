@@ -17,7 +17,7 @@ public class Immatriculation {
      * @return String   -   Immatriculation transformée ou vide si l'immatriculation est null.
      */
     public static String translator(String immatriculation) {
-        return immatriculation != null ? immatriculation.replaceAll(" ", "").replaceAll("-", "").toUpperCase() : "";
+        return immatriculation != null ? immatriculation.replace(" ", "").replace("-", "").toUpperCase() : "";
     }
 
     /**
