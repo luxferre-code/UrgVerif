@@ -103,5 +103,20 @@ public class AgentDAO implements IDao<Agent, String> {
             return false;
         }
     }
+
+    public boolean check(String matricule, String password) {
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM agent WHERE matricule = ? AND password = ?");
+            ps.setString(1, matricule);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch(Exception e) {
+            Log.error(e.getMessage());
+        }
+        return false;
+    }
     
 }
