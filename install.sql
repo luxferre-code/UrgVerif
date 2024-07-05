@@ -28,24 +28,23 @@ CREATE TABLE gallon
 );
 
 INSERT INTO gallon(gallon)
-VALUES (
-    ("Sapeur 2ème classe"),
-    ("Sapeur 1ère classe"),
-    ("Caporal"),
-    ("Caporal-chef"),
-    ("Sergent"),
-    ("Sergent-chef"),
-    ("Adjudant"),
-    ("Adjudant-chef"),
-    ("Lieutenant"),
-    ("Capitaine"),
-    ("Commandant"),
-    ("Lieutenant-colonel"),
-    ("Colonel"),
-    ("Administrateur du site")
-);
+VALUES 
+    ('Sapeur 2ème classe'),
+    ('Sapeur 1ère classe'),
+    ('Caporal'),
+    ('Caporal-chef'),
+    ('Sergent'),
+    ('Sergent-chef'),
+    ('Adjudant'),
+    ('Adjudant-chef'),
+    ('Lieutenant'),
+    ('Capitaine'),
+    ('Commandant'),
+    ('Lieutenant-colonel'),
+    ('Colonel'),
+    ('Administrateur du site');
 
-CREATE TABLE agent
+CREATE TABLE IF NOT EXISTS agent
 (
     matricule TEXT UNIQUE,
     nom TEXT NOT NULL,
@@ -53,10 +52,10 @@ CREATE TABLE agent
     password TEXT NOT NULL,
     mail TEXT NOT NULL CHECK (mail ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') UNIQUE,
     id_centre INT,
-    gallon INT DEFAULT 0,
+    id_gallon INT DEFAULT 0,
     CONSTRAINT pkey_agent PRIMARY KEY (matricule),
     CONSTRAINT fkey_agent_centre FOREIGN KEY (id_centre) REFERENCES centre(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_agent_gallon FOREIGN KEY (gallon) REFERENCES gallon(id) ON DELETE CASCADE
+    CONSTRAINT fkey_agent_gallon FOREIGN KEY (id_gallon) REFERENCES gallon(id) ON DELETE CASCADE
 );
 
 CREATE TABLE chef_centre
@@ -99,15 +98,15 @@ CREATE TABLE compartiment
 );
 
 INSERT INTO compartiment(nom, type_engin)
-VALUES  ('Coffre haut &quot;Capucine&quot;', 'VSAV'),
+VALUES  ('Coffre haut "Capucine"', 'VSAV'),
         ('Paroi', 'VSAV'),
         ('Placard Kit', 'VSAV'),
         ('Rangements', 'VSAV'),
         ('DSA', 'VSAV'),
         ('Tiroir 1', 'VSAV'),
         ('Tiroir 2', 'VSAV'),
-        ('Tiror Ventilation', 'VSAV'),
-        ('Tiroir Insuflateur', 'VSAV'),
+        ('Tiroir Ventilation', 'VSAV'),
+        ('Tiroir Insufflateur', 'VSAV'),
         ('Tiroir Accouchement', 'VSAV'),
         ('Les niveaux', 'VSAV'),
         ('Cabine avant conducteur', 'VSAV'),
@@ -144,7 +143,7 @@ CREATE TABLE verif_history
     CONSTRAINT fkey_verif_history_immatriculation FOREIGN KEY (immatriculation) REFERENCES vehicule(immatriculation) ON DELETE CASCADE 
 );
 
--- Création d'une view qui permet de voir quand est-ce que chaque véhicule a été vérifié pour la dernière fois
+-- Création d'une vue qui permet de voir quand est-ce que chaque véhicule a été vérifié pour la dernière fois
 CREATE OR REPLACE VIEW last_verif AS
 SELECT immatriculation, date_verif, time_verif, matricule
 FROM verif_history

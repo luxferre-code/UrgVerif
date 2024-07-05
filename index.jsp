@@ -1,3 +1,7 @@
-<script>
-    window.location.href = "login";
-</script>
+<%
+    if(session.getAttribute("matricule") != null) {
+        response.sendRedirect("home");
+    } else {
+        response.sendRedirect("login");
+    }
+%>

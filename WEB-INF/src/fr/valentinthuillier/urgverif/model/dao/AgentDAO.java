@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.valentinthuillier.urgverif.Log;
+import fr.valentinthuillier.urgverif.Password;
 import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dto.Agent;
 import fr.valentinthuillier.urgverif.model.dto.Gallon;
@@ -106,12 +107,12 @@ public class AgentDAO implements IDao<Agent, String> {
 
     public boolean check(String matricule, String password) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM agent WHERE matricule = ? AND password = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT password FROM agent WHERE matricule = ?");
             ps.setString(1, matricule);
-            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
-                return rs.getInt(1) > 0;
+                String hash = rs.getString("password");
+                return Password.verify(password, hash);
             }
         } catch(Exception e) {
             Log.error(e.getMessage());
