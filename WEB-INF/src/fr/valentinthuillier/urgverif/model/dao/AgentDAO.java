@@ -29,7 +29,7 @@ public class AgentDAO implements IDao<Agent, String> {
                     rs.getString("password"),
                     rs.getString("mail"),
                     rs.getInt("id_centre"),
-                    Gallon.getGallon(rs.getInt("gallon"))
+                    Gallon.getGallon(rs.getInt("id_gallon"))
                 );
             }
         } catch(Exception e) {
@@ -42,7 +42,7 @@ public class AgentDAO implements IDao<Agent, String> {
     public List<Agent> findAll() {
         List<Agent> agents = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT matricule, nom, prenom, password, mail, id_centre, gallon FROM agent");
+            PreparedStatement ps = con.prepareStatement("SELECT matricule, nom, prenom, password, mail, id_centre, id_gallon FROM agent");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 agents.add(new Agent(
@@ -52,7 +52,7 @@ public class AgentDAO implements IDao<Agent, String> {
                     rs.getString("password"),
                     rs.getString("mail"),
                     rs.getInt("id_centre"),
-                    Gallon.getGallon(rs.getInt("gallon"))
+                    Gallon.getGallon(rs.getInt("id_gallon"))
                 ));
             }
         } catch(Exception e) {
@@ -64,7 +64,7 @@ public class AgentDAO implements IDao<Agent, String> {
     @Override
     public Agent save(Agent dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO agent (matricule, nom, prenom, password, mail, id_centre, gallon) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO agent (matricule, nom, prenom, password, mail, id_centre, id_gallon) VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, dto.getMatricule());
             ps.setString(2, dto.getNom());
             ps.setString(3, dto.getPrenom());
@@ -83,7 +83,7 @@ public class AgentDAO implements IDao<Agent, String> {
     @Override
     public Agent update(Agent dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("UPDATE agent SET nom = ?, prenom = ?, password = ?, mail = ?, id_centre = ?, gallon = ? WHERE matricule = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE agent SET nom = ?, prenom = ?, password = ?, mail = ?, id_centre = ?, id_gallon = ? WHERE matricule = ?");
             ps.setString(1, dto.getNom());
             ps.setString(2, dto.getPrenom());
             ps.setString(3, dto.getPassword());

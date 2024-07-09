@@ -29,7 +29,7 @@ public class DS {
         System.out.println(path);
     }
 
-    private static final String CONFIG_FILE_PATH = "/config-urgverif.prop";
+    private static final String CONFIG_FILE_PATH = Paths.get(path, "config-urgverif.prop").toString();
     private static final String VERSION = "1.0";
     private static volatile DS instance = null;
     private final String nom;
@@ -38,9 +38,11 @@ public class DS {
 
     private DS() throws Exception {
         Log.info("Loading database configuration");
+        System.out.println(CONFIG_FILE_PATH + " " + Files.exists(Paths.get(CONFIG_FILE_PATH)));
         Properties properties = loadProperties();
 
-        this.url = properties.getProperty("url");
+        this.url = properties.getProperty("url").replace("\\", "");
+        System.out.println(this.url);
         this.nom = properties.getProperty("login");
         this.mdp = properties.getProperty("password");
 
@@ -85,6 +87,7 @@ public class DS {
     public static boolean isConfigured() {
         try {
             getInstance();
+            DS.getConnection().close();
             return true;
         } catch (Exception e) {
             return false;
@@ -95,8 +98,8 @@ public class DS {
         Files.createDirectories(configFilePath.getParent());
         Properties properties = new Properties();
         properties.setProperty("driver", "org.postgresql.Driver");
-        properties.setProperty("url", "jdbc:postgresql://valentin-thuillier.fr:5432/urgverif");
-        properties.setProperty("login", "urgverif");
+        properties.setProperty("url", "URL");
+        properties.setProperty("login", "LOGIN");
         properties.setProperty("password", "TOSET");
         properties.setProperty("version", VERSION);
 
@@ -120,6 +123,8 @@ public class DS {
         }
 
         Log.info("Configuration file updated, please restart the server.");
+        DS.instance = null;
+        startInstallSQLFiles();
     }
 
     public static Connection getConnection() {
@@ -158,13 +163,11 @@ public class DS {
             for (String file : files) {
                 try {
                     String sql = Files.readString(Paths.get(file));
-                    statement.addBatch(sql);
+                    statement.execute(sql);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
             }
-
-            statement.executeBatch();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

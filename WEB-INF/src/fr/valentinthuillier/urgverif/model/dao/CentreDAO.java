@@ -69,12 +69,16 @@ public class CentreDAO implements IDao<Centre, Integer> {
     @Override
     public Centre save(Centre dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO centre(nom, adresse telephone) VALUES(?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO centre(nom, adresse, telephone) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, dto.getNom());
             ps.setString(2, dto.getAdresse());
             ps.setString(3, dto.getTelephone());
             ps.executeUpdate();
-            int id = ps.getGeneratedKeys().getInt(1);
+            ResultSet rs = ps.getGeneratedKeys();
+            int id = -1;
+            if(rs.next()) {
+                id = rs.getInt(1);
+            }
             return new Centre(id, dto.getNom(), dto.getAdresse(), dto.getTelephone());
         } catch(Exception e) {
             Log.error("CentreDAO.save: Erreur lors de l'ajout du centre: " + e.getMessage());

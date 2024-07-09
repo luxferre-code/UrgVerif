@@ -62,7 +62,7 @@ public class InstallServlet extends HttpServlet {
             return;
         }
 
-        CharSequenceTranslator cst = StringEscapeUtils.ESCAPE_HTML4.with(StringEscapeUtils.ESCAPE_XML10);
+        CharSequenceTranslator cst = StringEscapeUtils.ESCAPE_HTML4;
         hostIP = cst.translate(hostIP);
         port = cst.translate(port);
         dbName = cst.translate(dbName);
