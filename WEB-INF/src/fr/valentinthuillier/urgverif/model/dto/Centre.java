@@ -10,7 +10,6 @@ public class Centre {
     private final int ID;
     private String nom;
     private String adresse;
-    private String chefCentre;
     private String telephone;
     
     /**
@@ -18,14 +17,12 @@ public class Centre {
      * @param iD    (int)   -   ID du centre
      * @param nom   (String)    -   Nom du centre
      * @param adresse   (String)    -   Adresse du centre
-     * @param chefCentre    (String)    -   Chef du centre
      * @param telephone (String)    -   Téléphone du centre
      */
-    public Centre(int iD, String nom, String adresse, String chefCentre, String telephone) {
+    public Centre(int iD, String nom, String adresse, String telephone) {
         ID = iD;
         this.nom = nom;
         this.adresse = adresse;
-        this.chefCentre = chefCentre;
         this.telephone = telephone;
     }
 
@@ -33,11 +30,10 @@ public class Centre {
      * Constructeur de la classe Centre, ou l'ID est initialisé à -1
      * @param nom   (String)    -   Nom du centre
      * @param adresse   (String)    -   Adresse du centre
-     * @param chefCentre    (String)    -   Chef du centre
      * @param telephone (String)    -   Téléphone du centre
      */
-    public Centre(String nom, String adresse, String chefCentre, String telephone) {
-        this(-1, nom, adresse, chefCentre, telephone);
+    public Centre(String nom, String adresse, String telephone) {
+        this(-1, nom, adresse, telephone);
     }
 
     /**
@@ -79,23 +75,6 @@ public class Centre {
     public void setAdresse(String adresse) {
         this.adresse = adresse;
     }
-
-    /**
-     * Getter du chef du centre
-     * @return  (String)    -   Chef du centre
-     */
-    public String getChefCentre() {
-        return chefCentre;
-    }
-
-    /**
-     * Setter du chef du centre
-     * @param chefCentre    (String)    -   Chef du centre
-     */
-    public void setChefCentre(String chefCentre) {
-        this.chefCentre = chefCentre;
-    }
-
     /**
      * Getter du téléphone
      * @return  (String)    -   Téléphone du centre
@@ -123,7 +102,6 @@ public class Centre {
         result = prime * result + ID;
         result = prime * result + ((nom == null) ? 0 : nom.hashCode());
         result = prime * result + ((adresse == null) ? 0 : adresse.hashCode());
-        result = prime * result + ((chefCentre == null) ? 0 : chefCentre.hashCode());
         result = prime * result + ((telephone == null) ? 0 : telephone.hashCode());
         return result;
     }
@@ -142,7 +120,6 @@ public class Centre {
         return ID == other.ID &&
                 nom != null && nom.equals(other.nom) &&
                 adresse != null && adresse.equals(other.adresse) &&
-                chefCentre != null && chefCentre.equals(other.chefCentre) &&
                 telephone != null && telephone.equals(other.telephone);
     }
 

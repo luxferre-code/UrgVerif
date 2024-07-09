@@ -2,7 +2,7 @@ package fr.valentinthuillier.urgverif.servlets;
 
 import java.io.IOException;
 
-import fr.valentinthuillier.urgverif.Password;
+import fr.valentinthuillier.urgverif.model.DS;
 import fr.valentinthuillier.urgverif.model.dao.AgentDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -17,6 +17,11 @@ public class LoginServelt extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if(!DS.isConfigured()) {
+            resp.sendRedirect(req.getContextPath() + "/install");
+            return;
+        }
+        
         HttpSession session = req.getSession();
         if(session.getAttribute("matricule") != null) {
             resp.sendRedirect(req.getContextPath() + "/home");

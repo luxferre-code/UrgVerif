@@ -30,11 +30,11 @@ public class CentreDAO implements IDao<Centre, Integer> {
     public Centre findById(Integer id) {
         Centre centre = null;
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT nom, adresse, chef_centre, telephone FROM centre WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT nom, adresse, telephone FROM centre WHERE id = ?");
             ps.setInt(1, id.intValue());
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
-                centre = new Centre(id, rs.getString("nom"), rs.getString("adresse"), rs.getString("chef_centre"), rs.getString("telephone"));
+                centre = new Centre(id, rs.getString("nom"), rs.getString("adresse"), rs.getString("telephone"));
             }
         } catch(Exception e) {
             Log.error("CentreDAO.findById: Erreur durant la récupération du centre: " + e.getMessage());
@@ -51,9 +51,9 @@ public class CentreDAO implements IDao<Centre, Integer> {
         List<Centre> centres = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT id, nom, adresse, chef_centre, telephone FROM centre");
+            ResultSet rs = stmt.executeQuery("SELECT id, nom, adresse, telephone FROM centre");
             while(rs.next()) {
-                centres.add(new Centre(rs.getInt("id"), rs.getString("nom"), rs.getString("adresse"), rs.getString("chef_centre"), rs.getString("telephone")));
+                centres.add(new Centre(rs.getInt("id"), rs.getString("nom"), rs.getString("adresse"), rs.getString("telephone")));
             }
         } catch(Exception e) {
             Log.error("CentreDAO.findAll: Erreur durant la récupération des centres: " + e.getMessage());
@@ -69,14 +69,13 @@ public class CentreDAO implements IDao<Centre, Integer> {
     @Override
     public Centre save(Centre dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO centre(nom, adresse, chef_centre, telephone) VALUES(?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO centre(nom, adresse telephone) VALUES(?, ?, ?)");
             ps.setString(1, dto.getNom());
             ps.setString(2, dto.getAdresse());
-            ps.setString(3, dto.getChefCentre());
-            ps.setString(4, dto.getTelephone());
+            ps.setString(3, dto.getTelephone());
             ps.executeUpdate();
             int id = ps.getGeneratedKeys().getInt(1);
-            return new Centre(id, dto.getNom(), dto.getAdresse(), dto.getChefCentre(), dto.getTelephone());
+            return new Centre(id, dto.getNom(), dto.getAdresse(), dto.getTelephone());
         } catch(Exception e) {
             Log.error("CentreDAO.save: Erreur lors de l'ajout du centre: " + e.getMessage());
         }
@@ -91,12 +90,11 @@ public class CentreDAO implements IDao<Centre, Integer> {
     @Override
     public Centre update(Centre dto) {
         try(Connection con = DS.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("UPDATE centre SET nom = ?, adresse = ?, chef_centre = ?, telephone = ? WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE centre SET nom = ?, adresse = ?, telephone = ? WHERE id = ?");
             ps.setString(1, dto.getNom());
             ps.setString(2, dto.getAdresse());
-            ps.setString(3, dto.getChefCentre());
-            ps.setString(4, dto.getTelephone());
-            ps.setInt(5, dto.getID());
+            ps.setString(3, dto.getTelephone());
+            ps.setInt(4, dto.getID());
             ps.executeUpdate();
             return dto;
         } catch(Exception e) {

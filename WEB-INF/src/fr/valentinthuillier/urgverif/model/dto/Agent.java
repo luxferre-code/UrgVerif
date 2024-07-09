@@ -5,14 +5,16 @@ public class Agent {
     private String matricule;
     private String nom;
     private String prenom;
+    private String password;
     private String mail;
     private int idCentre;
     private Gallon gallon;
 
-    public Agent(String matricule, String nom, String prenom, String mail, int idCentre, Gallon gallon) {
+    public Agent(String matricule, String nom, String prenom, String password, String mail, int idCentre, Gallon gallon) {
         this.matricule = matricule;
         this.nom = nom;
         this.prenom = prenom;
+        this.password = password;
         this.mail = mail;
         this.idCentre = idCentre;
         this.gallon = gallon;
@@ -66,6 +68,12 @@ public class Agent {
         this.gallon = gallon;
     }
 
-    
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }    
     
 }

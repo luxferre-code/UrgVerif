@@ -25,3 +25,5 @@ replay_pid*
 identifiant
 TODO
 logs
+
+docker-compose.yml
