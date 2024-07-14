@@ -65,6 +65,24 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         return typeEngin;
     }
 
+    public List<Vehicule> findByCentre(int id) {
+        List<Vehicule> vehicules = new ArrayList<>();
+        try(Connection con = DS.getConnection()) {
+
+            PreparedStatement ps = con.prepareStatement("SELECT immatriculation, type_engin FROM vehicule WHERE id_centre = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                vehicules.add(new Vehicule(rs.getString("immatriculation"), rs.getString("type_engin"), null));
+            }
+            ps.close();
+
+        } catch(Exception e) {
+            Log.error("Erreur lors de la récupération des véhicules: " + e.getMessage());
+        }
+        return vehicules;
+    }
+
     @Override
     public List<Vehicule> findAll() {
         Log.warning("Unimplemented method 'findAll' in VehiculeDAO");
@@ -118,6 +136,22 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         } catch(Exception e) {
             Log.error("Erreur lors de l'affectation du matériel: " + e.getMessage());
         }
+    }
+
+    public boolean isVerifiedToday(Vehicule v) {
+        try(Connection con = DS.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM verif_history WHERE immatriculation = ? AND date_verif = CURRENT_DATE");
+            ps.setString(1, v.getImmatriculation());
+            ResultSet rs = ps.executeQuery();
+            if(!rs.next()) {
+                return false;
+            }
+            ps.close();
+            return true;
+        } catch(Exception e) {
+            Log.error("Erreur lors de la vérification de la vérification: " + e.getMessage());
+        }
+        return false;
     }
 
 }

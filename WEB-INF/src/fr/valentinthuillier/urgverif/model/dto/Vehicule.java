@@ -113,4 +113,24 @@ public class Vehicule {
         return "Vehicule [immatriculation=" + immatriculation + ", typeEngin=" + typeEngin + ", centre=" + centre + "]";
     }
 
+    /**
+     * Génération de la représentation de l'objet en HTML
+     * @return String   -   Représentation de l'objet en HTML
+     */
+    public String toHTML() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<article class=\"vehicule bg-white shadow-md rounded-lg p-4 mb-4\">")
+          .append("<h2 class=\"text-xl font-bold mb-2\">Véhicule</h2>")
+          .append("<p><strong>Immatriculation:</strong> ")
+          .append(immatriculation)
+          .append("</p>")
+          .append("<p><strong>Type d'engin:</strong> ")
+          .append(typeEngin)
+          .append("</p>")
+          .append("<p><strong>Centre:</strong> ")
+          .append(centre.getNom()) // Assuming Centre has a getName() method
+          .append("</p>")
+          .append("</article>");
+        return sb.toString();
+    }
 }
