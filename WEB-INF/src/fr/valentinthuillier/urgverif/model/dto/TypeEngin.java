@@ -1,5 +1,11 @@
 package fr.valentinthuillier.urgverif.model.dto;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import fr.valentinthuillier.urgverif.Log;
+import fr.valentinthuillier.urgverif.model.DS;
+
 /**
  * Enumeration representing all types of fire engines that can be used by fire departments.
  * This includes common vehicles such as the VSAV (Rescue and Assistance Vehicle for Victims)
@@ -72,9 +78,22 @@ public enum TypeEngin {
 
     TypeEngin(String fullName) {
         this.fullName = fullName;
+		updateBDD(); // Update the database with the new type of fire engine if it does not already exist
     }
 
     public String getFullName() {
         return fullName;
     }
+
+	private void updateBDD() {
+		try(Connection con = DS.getConnection()) {
+			PreparedStatement ps = con.prepareStatement("INSERT INTO type_engin(nom) VALUES (?)");
+			ps.setString(1, this.name());
+			ps.executeUpdate();
+			ps.close();
+		} catch(Exception e) {
+			Log.error("Erreur lors de la mise à jour de la base de données: " + e.getMessage());
+		}
+	}
+
 }
