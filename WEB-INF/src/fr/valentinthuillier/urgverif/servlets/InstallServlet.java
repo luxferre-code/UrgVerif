@@ -101,7 +101,8 @@ public class InstallServlet extends HttpServlet {
             return;
         }
 
-        resp.sendRedirect(req.getContextPath() + "/login");
+        System.out.println("Installation successful, please restart the server");
+        System.exit(0);
     }
 
 }
