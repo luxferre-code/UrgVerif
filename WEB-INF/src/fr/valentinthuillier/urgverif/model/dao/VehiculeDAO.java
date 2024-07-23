@@ -99,11 +99,11 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         try(Connection con = DS.getConnection()) {
             PreparedStatement ps = con.prepareStatement("INSERT INTO vehicule(immatriculation, type_engin, id_centre) VALUES(?, ?, ?)");
             ps.setString(1, dto.getImmatriculation());
-            ps.setString(2, dto.getTypeEngin());
+            ps.setString(2, dto.getTypeEngin().name());
             ps.setInt(3, dto.getCentre().getID());
             ps.executeUpdate();
             ps.close();
-            return new Vehicule(dto.getImmatriculation(), dto.getTypeEngin(), dto.getCentre());
+            return new Vehicule(dto.getImmatriculation(), dto.getTypeEngin().name(), dto.getCentre());
         } catch(Exception e) {
             Log.error("Erreur lors de l'ajout du véhicule: " + e.getMessage());
         }
@@ -130,7 +130,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
         try(Connection con = DS.getConnection()) {
             PreparedStatement ps = con.prepareStatement("INSERT INTO materiel(id_compartiment, id_vehicule, nom, quantite) SELECT id_compartiment, ?, nom, quantite FROM materiel WHERE id_vehicule = ?");
             ps.setString(1, v.getImmatriculation());
-            ps.setString(2, v.getTypeEngin().toLowerCase());
+            ps.setString(2, v.getTypeEngin().name().toLowerCase());
             ps.executeUpdate();
             ps.close();
         } catch(Exception e) {

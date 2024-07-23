@@ -53,7 +53,7 @@ public class CompartimentDAO implements IDao<Compartiment, Integer> {
         List<Compartiment> compartiments = new ArrayList<>();
         try(Connection con = DS.getConnection()) {
             PreparedStatement ps = con.prepareStatement("SELECT id, nom, type_engin FROM compartiment WHERE type_engin = ?");
-            ps.setString(1, vehicule.getTypeEngin());
+            ps.setString(1, vehicule.getTypeEngin().name());
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 compartiments.add(new Compartiment(rs.getInt("id"), rs.getString("nom"), rs.getString("type_engin")));

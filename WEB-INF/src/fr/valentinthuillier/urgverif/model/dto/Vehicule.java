@@ -8,7 +8,7 @@ package fr.valentinthuillier.urgverif.model.dto;
 public class Vehicule {
     
     private String immatriculation;
-    private String typeEngin;
+    private TypeEngin typeEngin;
     private Centre centre;
 
     /**
@@ -20,7 +20,7 @@ public class Vehicule {
      */
     public Vehicule(String immatriculation, String typeEngin, Centre centre) {
         this.immatriculation = immatriculation;
-        this.typeEngin = typeEngin;
+        this.typeEngin = TypeEngin.valueOf(typeEngin);
         this.centre = centre;
     }
 
@@ -42,17 +42,17 @@ public class Vehicule {
 
     /**
      * Getter du type d'engin
-     * @return String   -   Type d'engin du véhicule
+     * @return TypeEngin   -   Type d'engin du véhicule
      */
-    public String getTypeEngin() {
+    public TypeEngin getTypeEngin() {
         return typeEngin;
     }
 
     /**
      * Setter du type d'engin
-     * @param typeEngin (String)    -   Type d'engin du véhicule
+     * @param typeEngin (TypeEngin)    -   Type d'engin du véhicule
      */
-    public void setTypeEngin(String typeEngin) {
+    public void setTypeEngin(TypeEngin typeEngin) {
         this.typeEngin = typeEngin;
     }
 

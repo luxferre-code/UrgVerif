@@ -76,4 +76,9 @@ public class Agent {
         this.password = password;
     }    
     
+    @Override
+    public String toString() {
+        return this.gallon.getGrade() + " " + this.nom.toUpperCase() + " " + this.prenom.substring(0, 1).toUpperCase() + ". (" + this.matricule + ")";
+    }
+
 }
