@@ -120,7 +120,6 @@ public class Vehicule {
     public String toHTML() {
         StringBuilder sb = new StringBuilder();
         sb.append("<article class=\"vehicule bg-white shadow-md rounded-lg p-4 mb-4\">")
-          .append("<h2 class=\"text-xl font-bold mb-2\">Véhicule</h2>")
           .append("<p><strong>Immatriculation:</strong> ")
           .append(immatriculation)
           .append("</p>")

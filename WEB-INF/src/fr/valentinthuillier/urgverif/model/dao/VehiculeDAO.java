@@ -73,7 +73,7 @@ public class VehiculeDAO implements IDao<Vehicule, String> {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                vehicules.add(new Vehicule(rs.getString("immatriculation"), rs.getString("type_engin"), null));
+                vehicules.add(new Vehicule(rs.getString("immatriculation"), rs.getString("type_engin"), new CentreDAO().findById(id)));
             }
             ps.close();
 

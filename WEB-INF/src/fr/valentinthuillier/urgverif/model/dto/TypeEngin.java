@@ -93,6 +93,7 @@ public enum TypeEngin {
 			ps.close();
 		} catch(Exception e) {
 			Log.error("Erreur lors de la mise à jour de la base de données: " + e.getMessage());
+            
 		}
 	}
 

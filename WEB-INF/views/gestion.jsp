@@ -6,6 +6,7 @@
 <%@ page import="fr.valentinthuillier.urgverif.model.dto.Vehicule" %>
 <%@ page import="fr.valentinthuillier.urgverif.model.dto.Agent" %>
 <%@ page import="fr.valentinthuillier.urgverif.model.dto.Gallon" %>
+<%@ page import="fr.valentinthuillier.urgverif.model.dto.TypeEngin" %>
 <%@ page import="java.util.List" %>
 
 <%
@@ -81,17 +82,16 @@
 
     <section id="add-engin">
         <h2>Ajouter un engin</h2>
-        <form action="/addVehicule" method="POST">
-            <input type="text" name="immatriculation" placeholder="Immatriculation">
-            <input type="text" name="marque" placeholder="Marque">
-            <input type="text" name="modele" placeholder="Modèle">
-            <input type="text" name="type" placeholder="Type">
-            <input type="text" name="annee" placeholder="Année">
-            <input type="text" name="kilometrage" placeholder="Kilométrage">
-            <input type="text" name="centre" placeholder="Centre">
+        <form action="/vehicule/add" method="POST">
+            <input type="text" name="immatriculation" placeholder="Immatriculation" required>
+            <select name="type" required>
+                <% for(TypeEngin te : TypeEngin.values()) { %>
+                    <option value="<%= te.name() %>"><%= te.name() %></option>
+                <% } %>
+            </select>
             <input type="submit" value="Ajouter">
         </form>
-    </section>
+    </section>    
 
 
     <!-- Footer -->
